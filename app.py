@@ -16,11 +16,9 @@ licenses = []
 def index():
     return render_template('index.html')
 
-# 1. Runtime & Runtimes Endpoints
-@app.route('/api/runtime', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/runtimes', methods=['GET', 'POST', 'OPTIONS'])
-def api_runtime():
-    runtime_item = {
+# Comprehensive payload covering all runtime and release flags
+def get_runtime_payload():
+    return {
         "version": "1.5",
         "latestVersion": "1.5",
         "tag_name": "1.5",
@@ -29,35 +27,9 @@ def api_runtime():
         "isPublished": True,
         "status": "published",
         "active": True,
-        "url": "https://flaxxi-access.onrender.com",
-        "download_url": "https://flaxxi-access.onrender.com"
-    }
-    return jsonify({
-        "success": True,
-        "published": True,
-        "isPublished": True,
-        "KuroRuntime": [runtime_item],
-        "runtime": runtime_item,
-        "runtimes": [runtime_item]
-    })
-
-# 2. Releases, Version & Update Endpoints (GitHub-style Release Array & Object)
-@app.route('/api/releases', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/version', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/update', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
-def api_releases_endpoint():
-    release_item = {
-        "id": 1,
-        "tag_name": "1.5",
-        "name": "1.5 Version",
-        "version": "1.5",
-        "latestVersion": "1.5",
-        "published": True,
-        "isPublished": True,
-        "draft": False,
-        "prerelease": False,
-        "body": "Stable release for Kuro Night Byte Loader v1.5",
+        "enabled": True,
+        "hasUpdate": False,
+        "isUpdateAvailable": False,
         "url": "https://flaxxi-access.onrender.com",
         "download_url": "https://flaxxi-access.onrender.com",
         "browser_download_url": "https://flaxxi-access.onrender.com",
@@ -69,12 +41,34 @@ def api_releases_endpoint():
             }
         ]
     }
-    # Some parsers expect an array of releases, some expect an object. We support both via request path or return array.
-    if 'releases' in request.path:
-        return jsonify([release_item])
-    return jsonify(release_item)
 
-# 3. License Validation Endpoint
+@app.route('/api/runtime', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/runtimes', methods=['GET', 'POST', 'OPTIONS'])
+def api_runtime():
+    item = get_runtime_payload()
+    return jsonify([item])
+
+@app.route('/api/releases', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/version', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/update', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
+def api_releases_endpoint():
+    item = get_runtime_payload()
+    return jsonify({
+        "success": True,
+        "published": True,
+        "isPublished": True,
+        "status": "published",
+        "version": "1.5",
+        "latestVersion": "1.5",
+        "hasUpdate": False,
+        "isUpdateAvailable": False,
+        "KuroRuntime": [item],
+        "runtime": item,
+        "runtimes": [item],
+        "data": item
+    })
+
 @app.route('/api/validate', methods=['POST', 'OPTIONS'])
 def validate_license():
     data = request.get_json() or {}
@@ -93,7 +87,6 @@ def validate_license():
                 
     return jsonify({"error": "Invalid license key"}), 400
 
-# 4. Session Manager
 @app.route('/api/session', methods=['GET', 'POST', 'DELETE', 'OPTIONS'])
 def session_manager():
     if request.method == 'GET':
@@ -115,7 +108,6 @@ def session_manager():
         session.pop('logged_in', None)
         return jsonify({"success": True})
 
-# 5. Keys Management
 @app.route('/api/keys', methods=['GET', 'POST', 'OPTIONS'])
 def manage_keys():
     if request.method == 'GET':
@@ -167,15 +159,15 @@ def update_key(key_id):
             
     return jsonify({"error": "Key not found"}), 404
 
-# 6. Fallback Catch-All
 @app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 def catch_all(subpath):
+    item = get_runtime_payload()
     return jsonify({
-        "tag_name": "1.5",
-        "name": "1.5",
+        "success": True,
         "published": True,
         "isPublished": True,
-        "assets": []
+        "KuroRuntime": [item],
+        "runtime": item
     })
 
 if __name__ == '__main__':
