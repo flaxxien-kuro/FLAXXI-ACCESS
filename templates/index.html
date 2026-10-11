@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>
+      Kuro Night Byte · Kuro
+    </title>
+    <style>
+      @import url(&#39;https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap&#39;);
+:root{color-scheme:dark;--bg:#050907;--card:#0b1510;--line:#21382b;--text:#ffffff;--muted:#91aa9b;--violet:#4df39b;--lime:#52f49d}*{box-sizing:border-box}body{margin:0;font-family:&#39;DM Sans&#39;,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;background-image:radial-gradient(ellipse at 95% 0%,#12c85c22,transparent 45%)}button,input,select{font:inherit}button{cursor:pointer;border:0}button:disabled{opacity:.55;cursor:wait}button,input,select{border-radius:12px}input,select{width:100%;background:#070d09;color:var(--text);border:1px solid var(--line);padding:14px}input:focus,select:focus{outline:2px solid var(--violet);outline-offset:2px}label{display:block;font-size:13px;color:var(--muted);margin-bottom:8px}h1,h2,.brand{font-family:&#39;Space Grotesk&#39;,sans-serif}h1{font-size:42px;letter-spacing:-1.8px;line-height:1.1;margin:12px 0 16px}h2{font-size:21px;margin:0}p{color:var(--muted);line-height:1.6}.wrap{max-width:1200px;margin:auto;padding:0 32px}.top{height:90px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}.brand{display:flex;gap:12px;align-items:center;font-size:23px;font-weight:600;letter-spacing:-.7px}.mark{width:40px;height:40px;border-radius:13px;background:var(--lime);color:#042512;display:grid;place-items:center;font-size:25px;box-shadow:0 4px 24px #52f49d20}.tag{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--violet)}.chip{border:1px solid var(--line);padding:8px 14px;border-radius:30px;font-size:12px;color:var(--muted)}.intro{display:flex;justify-content:space-between;align-items:end;margin:42px 0 28px}.intro p{margin:0}.ghost{white-space:nowrap;flex-shrink:0;background:transparent;border:1px solid var(--line);color:var(--muted);padding:10px 16px}.grid{display:grid;grid-template-columns:1fr 1.1fr;gap:24px}.card{border:1px solid var(--line);border-radius:22px;padding:28px;background:linear-gradient(145deg,#11291a,#08120c);box-shadow:0 20px 50px #0002}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}.step{color:var(--muted);font-family:&#39;Space Grotesk&#39;,sans-serif;font-size:13px}.field{margin-top:22px}.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}.primary{width:100%;padding:16px;background:var(--lime);color:#032714;font-weight:700;margin-top:28px;box-shadow:0 5px 20px #52f49d14}.primary:hover{background:#a1ffcb}.key-card{position:relative;overflow:hidden;background:linear-gradient(145deg,#164e2c,#082214);border-color:#2c8450}.key-card:before{content:&#39;ϟ&#39;;position:absolute;right:14px;top:30px;font-size:290px;color:#b99ee511;transform:rotate(12deg);pointer-events:none}.key-card&gt;*{position:relative}.key-card .tag{color:#a8ffce}.output{min-height:95px;margin:36px 0 20px;padding:20px;border:1px dashed #78efaa66;border-radius:16px;font-family:monospace;font-size:20px;line-height:1.7;overflow-wrap:anywhere;display:flex;align-items:center;color:#f1fff7}.output.empty{font-family:&#39;DM Sans&#39;;font-size:15px;color:#b7dec5}.key-card p{color:#b0d6bf;font-size:13px}.copy{padding:12px 18px;border:1px solid #80e8a177;background:#34de8521;color:white}.note{font-size:12px;line-height:1.6;color:var(--muted);margin-top:24px}.history{margin-top:28px;margin-bottom:30px}.table-wrap{overflow:auto;margin-top:22px}table{width:100%;border-collapse:collapse;text-align:left;white-space:nowrap;font-size:13px}th{font-weight:500;color:var(--muted);padding:0 15px 14px 0}td{padding:18px 15px 18px 0;border-top:1px solid var(--line)}td:first-child{color:var(--text)}.status{border-radius:30px;padding:6px 10px;font-size:11px;background:#52f49d12;color:var(--lime)}.status.off{background:#ff9aa414;color:#ff9aa4}.action{font-size:12px;color:var(--violet);background:transparent;padding:6px 10px}.action:hover{background:#4df39b15}.empty-row{text-align:center;color:var(--muted);padding:30px}.foot{display:flex;justify-content:space-between;font-size:11px;color:#80958a;padding:18px 0 30px}.login-shell{display:grid;place-items:center;min-height:calc(100vh - 130px)}.login-card{max-width:430px;width:100%}.login-card h1{font-size:34px}.error{color:#ffb5bf;font-size:13px;min-height:22px;margin-top:12px}.hidden{display:none!important}#toast{position:fixed;right:25px;bottom:25px;max-width:calc(100vw - 50px);background:#133220;color:white;border:1px solid #399f63;border-radius:14px;padding:14px 20px;z-index:5}.busy{opacity:.7}@media(max-width:740px){.wrap{padding:0 18px}.top{height:76px}.brand{font-size:20px}.chip{padding:7px 10px;font-size:10px}.intro{margin:30px 0 22px;align-items:start;gap:12px}h1{font-size:33px}.intro p{font-size:13px}.grid{grid-template-columns:1fr;gap:18px}.card{padding:23px;border-radius:18px}.output{font-size:17px;margin:25px 0 16px}.two{gap:12px}.foot{gap:16px;font-size:10px}.login-shell{padding:30px 0}.history{margin-top:20px}.tag{font-size:10px}}
+.card{backdrop-filter:blur(18px);transition:transform .22s,border-color .22s}.card:hover{border-color:#3b6d4f}.primary{transition:box-shadow .2s,transform .2s}.primary:hover{box-shadow:0 8px 32px #52f49d35;transform:translateY(-1px)}.mark{box-shadow:0 0 32px #52f49d30}body{background-image:radial-gradient(ellipse at 80% 0%,#12c85c22,transparent 55%),linear-gradient(135deg,#050907,#08150d)}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="top">
+        <div class="brand">
+          <span class="mark" aria-hidden="true">          ϟ
+</span>
+          Kuro Night Byte
+        </div>
+        <span class="chip">        KURO / RUNTIME 1.6
+</span>
+      </header>
+      <main id="loginView" class="login-shell">
+        <form class="card login-card" id="loginForm">
+          <span class="tag">          OWNER ACCESS
+</span>
+          <h1>
+            Your keys.
+            <br />
+            Your control.
+          </h1>
+          <p>
+            Sign in to manage Kuro licenses.
+          </p>
+          <div class="field">
+            <label for="username">
+              Username
+            </label>
+            <input id="username" autocomplete="username" required="" />
+          </div>
+          <div class="field">
+            <label for="password">
+              Password
+            </label>
+            <input id="password" type="password" autocomplete="current-password" required="" />
+          </div>
+          <button class="primary" id="signIn">
+            Sign in
+            <span aria-hidden="true">            ↗
+</span>
+          </button>
+          <div class="error" id="loginError" role="alert">
+          </div>
+        </form>
+      </main>
+      <main id="panelView" class="hidden">
+        <div class="intro">
+          <div>
+            <span class="tag">            LICENSE WORKSPACE
+</span>
+            <h1>
+              Make the next key.
+            </h1>
+            <p>
+              Set access. Generate. Keep control.
+            </p>
+            <p style="font-size:12px;color:#a8ffce">
+              Kuro connected · Runtime download and key activation verified.
+            </p>
+          </div>
+          <button class="ghost" id="logout">
+            Sign out
+          </button>
+        </div>
+        <div class="grid">
+          <form id="keyForm" class="card">
+            <div class="head">
+              <h2>
+                Generate license
+              </h2>
+              <span class="step">              01 / CREATE
+</span>
+            </div>
+            <div class="field">
+              <label for="mode">
+                Key type
+              </label>
+              <select id="mode">
+                <option value="random">
+                  Generate random key
+                </option>
+                <option value="custom">
+                  Use my custom key
+                </option>
+              </select>
+            </div>
+            <div class="field hidden" id="customField">
+              <label for="customKey">
+                Your custom key
+              </label>
+              <input id="customKey" maxlength="80" placeholder="Enter any key you choose" />
+              <p style="font-size:12px">
+                Use uppercase letters, numbers and hyphens for APK compatibility.
+              </p>
+            </div>
+            <div class="field">
+              <label for="label">
+                Customer label
+                <span>                (optional)
+</span>
+              </label>
+              <input id="label" maxlength="60" placeholder="e.g. Hassan · monthly" />
+            </div>
+            <div class="two">
+              <div class="field">
+                <label for="days">
+                  Valid for
+                </label>
+                <select id="days">
+                  <option value="1">
+                    1 day
+                  </option>
+                  <option value="2">
+                    2 days
+                  </option>
+                  <option value="3">
+                    3 days
+                  </option>
+                  <option value="7">
+                    7 days
+                  </option>
+                  <option value="30" selected="">
+                    30 days
+                  </option>
+                  <option value="90">
+                    90 days
+                  </option>
+                  <option value="365">
+                    1 year
+                  </option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="devices">
+                  Device limit
+                </label>
+                <input id="devices" type="number" min="1" max="50000" value="1" required="" />
+              </div>
+            </div>
+            <button class="primary" id="generate">
+              Generate key
+              <span aria-hidden="true">              ↗
+</span>
+            </button>
+            <div class="note">
+              Validity starts when the key is created. Save the generated key now; full keys are shown once.
+            </div>
+          </form>
+          <section class="card key-card">
+            <div class="head">
+              <h2>
+                Your new key
+              </h2>
+              <span class="tag">              02 / SHARE
+</span>
+            </div>
+            <div id="output" class="output empty" aria-live="polite">
+              Your generated key will appear here.
+            </div>
+            <button class="copy" id="copy" disabled="">
+              Copy key
+              <span aria-hidden="true">              ⧉
+</span>
+            </button>
+            <p id="outputMeta">
+              Choose a duration and device limit to begin.
+            </p>
+          </section>
+        </div>
+        <section class="card history">
+          <div class="head">
+            <h2>
+              License history
+            </h2>
+            <button class="ghost" id="refresh">
+              Refresh
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>
+                    Customer / ID
+                  </th>
+                  <th>
+                    Status
+                  </th>
+                  <th>
+                    Expires
+                  </th>
+                  <th>
+                    Devices
+                  </th>
+                  <th>
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="rows">
+              </tbody>
+            </table>
+          </div>
+          <div class="error" id="panelError" role="alert">
+          </div>
+        </section>
+      </main>
+      <footer class="foot">
+        <span>        Kuro Night Byte · Kuro licensing
+</span>
+        <span>        Private owner workspace
+</span>
+      </footer>
+    </div>
+    <div id="toast" class="hidden" role="status">
+    </div>
+    <script>
+      let csrf=&#39;&#39;,generatedKey=&#39;&#39;;const $=id=&gt;document.getElementById(id);
+async function api(path,method=&#39;GET&#39;,body){const r=await fetch(path,{method,headers:{&#39;Content-Type&#39;:&#39;application/json&#39;,&#39;X-CSRF-Token&#39;:csrf},body:body===undefined?undefined:JSON.stringify(body)});let d;try{d=await r.json()}catch{throw Error(&#39;Server unavailable. Try again.&#39;)}if(!r.ok)throw Error(d.error||&#39;Request failed.&#39;);return d}
+function toast(message){$(&#39;toast&#39;).textContent=message;$(&#39;toast&#39;).classList.remove(&#39;hidden&#39;);clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=&gt;$(&#39;toast&#39;).classList.add(&#39;hidden&#39;),3000)}
+function view(owner){$(&#39;loginView&#39;).classList.toggle(&#39;hidden&#39;,owner);$(&#39;panelView&#39;).classList.toggle(&#39;hidden&#39;,!owner)}
+function date(value){return new Date(value*1000).toLocaleDateString(undefined,{year:&#39;numeric&#39;,month:&#39;short&#39;,day:&#39;numeric&#39;})}
+async function refresh(){const data=await api(&#39;/api/keys&#39;);$(&#39;rows&#39;).replaceChildren();if(!data.keys.length){const tr=document.createElement(&#39;tr&#39;),td=document.createElement(&#39;td&#39;);td.colSpan=5;td.className=&#39;empty-row&#39;;td.textContent=&#39;No licenses yet. Generate your first key above.&#39;;tr.append(td);$(&#39;rows&#39;).append(tr)}for(const k of data.keys){const tr=document.createElement(&#39;tr&#39;);const expired=k.expires&lt;=Date.now()/1000;for(const value of [k.label||k.id,k.revoked?&#39;Revoked&#39;:expired?&#39;Expired&#39;:&#39;Active&#39;,date(k.expires),`${k.devices} / ${k.device_limit}`]){const td=document.createElement(&#39;td&#39;);td.textContent=value;if(tr.children.length===1){const span=document.createElement(&#39;span&#39;);span.className=&#39;status&#39;+(k.revoked||expired?&#39; off&#39;:&#39;&#39;);span.textContent=value;td.replaceChildren(span)}tr.append(td)}const td=document.createElement(&#39;td&#39;);for(const [action,label] of [[k.revoked?&#39;enable&#39;:&#39;revoke&#39;,k.revoked?&#39;Enable&#39;:&#39;Revoke&#39;],[&#39;reset_devices&#39;,&#39;Reset devices&#39;]]){const btn=document.createElement(&#39;button&#39;);btn.className=&#39;action&#39;;btn.textContent=label;btn.onclick=async()=&gt;{btn.disabled=true;try{await api(&#39;/api/keys/&#39;+k.id,&#39;POST&#39;,{action});await refresh();toast(action===&#39;reset_devices&#39;?&#39;Device bindings reset.&#39;:&#39;License updated.&#39;)}catch(e){$(&#39;panelError&#39;).textContent=e.message}finally{btn.disabled=false}};td.append(btn)}tr.append(td);$(&#39;rows&#39;).append(tr)}}
+$(&#39;mode&#39;).onchange=()=&gt;{$(&#39;customField&#39;).classList.toggle(&#39;hidden&#39;,$(&#39;mode&#39;).value!==&#39;custom&#39;);$(&#39;customKey&#39;).required=$(&#39;mode&#39;).value===&#39;custom&#39;};
+$(&#39;loginForm&#39;).onsubmit=async e=&gt;{e.preventDefault();$(&#39;signIn&#39;).disabled=true;$(&#39;loginError&#39;).textContent=&#39;&#39;;try{const d=await api(&#39;/api/session&#39;,&#39;POST&#39;,{username:$(&#39;username&#39;).value,password:$(&#39;password&#39;).value});csrf=d.csrf;$(&#39;password&#39;).value=&#39;&#39;;view(true);await refresh()}catch(e){$(&#39;loginError&#39;).textContent=e.message}finally{$(&#39;signIn&#39;).disabled=false}};
+$(&#39;keyForm&#39;).onsubmit=async e=&gt;{e.preventDefault();$(&#39;generate&#39;).disabled=true;$(&#39;panelError&#39;).textContent=&#39;&#39;;try{const d=await api(&#39;/api/keys&#39;,&#39;POST&#39;,{mode:$(&#39;mode&#39;).value,custom_key:$(&#39;customKey&#39;).value,label:$(&#39;label&#39;).value,days:Number($(&#39;days&#39;).value),device_limit:Number($(&#39;devices&#39;).value)});generatedKey=d.key;$(&#39;output&#39;).textContent=d.key;$(&#39;output&#39;).classList.remove(&#39;empty&#39;);$(&#39;copy&#39;).disabled=false;$(&#39;outputMeta&#39;).textContent=&#39;Expires &#39;+date(d.expires)+&#39; · &#39;+$(&#39;devices&#39;).value+&#39; device&#39;+(Number($(&#39;devices&#39;).value)&gt;1?&#39;s&#39;:&#39;&#39;);await refresh();toast(&#39;License created.&#39;)}catch(e){$(&#39;panelError&#39;).textContent=e.message}finally{$(&#39;generate&#39;).disabled=false}};
+$(&#39;copy&#39;).onclick=async()=&gt;{try{await navigator.clipboard.writeText(generatedKey);toast(&#39;Key copied.&#39;)}catch{toast(&#39;Select the key and copy it manually.&#39;)}};$(&#39;refresh&#39;).onclick=()=&gt;refresh().catch(e=&gt;$(&#39;panelError&#39;).textContent=e.message);
+$(&#39;logout&#39;).onclick=async()=&gt;{try{await api(&#39;/api/session&#39;,&#39;DELETE&#39;);csrf=&#39;&#39;;generatedKey=&#39;&#39;;$(&#39;output&#39;).textContent=&#39;Your generated key will appear here.&#39;;$(&#39;output&#39;).classList.add(&#39;empty&#39;);$(&#39;copy&#39;).disabled=true;view(false)}catch(e){toast(e.message)}};
+api(&#39;/api/session&#39;).then(async d=&gt;{csrf=d.csrf;view(d.owner);if(d.owner)await refresh()}).catch(e=&gt;$(&#39;loginError&#39;).textContent=e.message);
+    </script>
+  </body>
+</html>
