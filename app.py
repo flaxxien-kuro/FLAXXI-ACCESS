@@ -5,13 +5,12 @@ import string
 import time
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
+app.secret_key = 'super-secret-key-change-this'
 
-# Admin Credentials
+# Credentials
 ADMIN_USER = "FLAXXI"
 ADMIN_PASS = "FLAXXI@123"
 
-# In-memory database (License storage)
 licenses = []
 
 @app.route('/')
@@ -55,7 +54,6 @@ def manage_keys():
         days = int(data.get('days', 30))
         device_limit = int(data.get('device_limit', 1))
         
-        # Key generation logic
         if mode == 'custom' and custom_key:
             key = custom_key
         else:
@@ -98,4 +96,4 @@ def update_key(key_id):
     return jsonify({"error": "Key not found"}), 404
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=10000)
