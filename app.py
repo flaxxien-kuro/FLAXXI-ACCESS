@@ -16,19 +16,7 @@ licenses = []
 def index():
     return render_template('index.html')
 
-# Saare possible update/diagnostic endpoints jo APK check kar sakta hai
-@app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/update', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/update', methods=['GET', 'POST', 'OPTIONS'])
-def diagnostics():
-    return jsonify({
-        "status": "online", 
-        "success": True, 
-        "message": "Kuro system connected successfully",
-        "latest_version": "1.5",
-        "update_available": False
-    })
-
+# License Validation Endpoint
 @app.route('/api/validate', methods=['POST', 'OPTIONS'])
 def validate_license():
     data = request.get_json() or {}
@@ -47,6 +35,7 @@ def validate_license():
                 
     return jsonify({"error": "Invalid license key"}), 400
 
+# Session Management
 @app.route('/api/session', methods=['GET', 'POST', 'DELETE', 'OPTIONS'])
 def session_manager():
     if request.method == 'GET':
@@ -68,12 +57,9 @@ def session_manager():
         session.pop('logged_in', None)
         return jsonify({"success": True})
 
+# Key Management
 @app.route('/api/keys', methods=['GET', 'POST', 'OPTIONS'])
 def manage_keys():
-    if not session.get('logged_in'):
-        # Agar app direct keys fetch kare bina session ke, toh use allow karne ke liye condition loose kar sakte hain
-        pass
-    
     if request.method == 'GET':
         return jsonify({"keys": licenses})
         
@@ -122,6 +108,16 @@ def update_key(key_id):
             return jsonify({"success": True})
             
     return jsonify({"error": "Key not found"}), 404
+
+# CATCH-ALL ROUTE: Agar app koi bhi aur URL maange jo upar nahi hai, toh 404 ki jagah success dega
+@app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
+def catch_all(subpath):
+    return jsonify({
+        "status": "online",
+        "success": True,
+        "message": "Connected to Kuro server",
+        "version": "1.5"
+    })
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
