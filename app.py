@@ -16,7 +16,7 @@ licenses = []
 def index():
     return render_template('index.html')
 
-# Runtime endpoints: KuroRuntime as a List/Array with published objects
+# Runtime endpoints
 @app.route('/api/runtime', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/runtimes', methods=['GET', 'POST', 'OPTIONS'])
 def api_runtime():
@@ -41,7 +41,7 @@ def api_runtime():
         "runtimes": [runtime_item]
     })
 
-# Releases / Version / Update endpoints
+# Update, Version, Releases & Diagnostics endpoints (Array format with complete release metadata)
 @app.route('/api/releases', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/version', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/update', methods=['GET', 'POST', 'OPTIONS'])
@@ -56,8 +56,17 @@ def api_releases():
         "isPublished": True,
         "status": "published",
         "active": True,
+        "hasUpdate": False,
+        "isUpdateAvailable": False,
         "url": "https://flaxxi-access.onrender.com",
-        "download_url": "https://flaxxi-access.onrender.com"
+        "download_url": "https://flaxxi-access.onrender.com",
+        "browser_download_url": "https://flaxxi-access.onrender.com",
+        "assets": [
+            {
+                "name": "runtime.apk",
+                "browser_download_url": "https://flaxxi-access.onrender.com"
+            }
+        ]
     }
     return jsonify([update_item])
 
@@ -153,12 +162,14 @@ def update_key(key_id):
 
 @app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 def catch_all(subpath):
-    runtime_item = {
+    update_item = {
         "version": "1.5",
+        "tag_name": "1.5",
         "published": True,
-        "isPublished": True
+        "isPublished": True,
+        "url": "https://flaxxi-access.onrender.com"
     }
-    return jsonify([runtime_item])
+    return jsonify([update_item])
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
