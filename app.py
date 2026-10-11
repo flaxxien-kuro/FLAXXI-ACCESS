@@ -1,12 +1,12 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, session, jsonify
 import os
 import random
 import string
 import time
 
 app = Flask(__name__)
+app.secret_key = 'flaxxi-secret-key-999'
 
-# Credentials
 ADMIN_USER = "FLAXXI"
 ADMIN_PASS = "FLAXXI@123"
 
@@ -19,7 +19,8 @@ def index():
 @app.route('/api/session', methods=['GET', 'POST', 'DELETE'])
 def session_manager():
     if request.method == 'GET':
-        return jsonify({"owner": True, "csrf": "bypass-token"})
+        logged = session.get('logged_in', False)
+        return jsonify({"owner": logged, "csrf": "flaxxi-csrf-token"})
     
     elif request.method == 'POST':
         data = request.get_json() or {}
@@ -27,15 +28,20 @@ def session_manager():
         password = data.get('password')
         
         if username == ADMIN_USER and password == ADMIN_PASS:
-            return jsonify({"success": True, "csrf": "bypass-token"})
+            session['logged_in'] = True
+            return jsonify({"success": True, "csrf": "flaxxi-csrf-token"})
         else:
             return jsonify({"error": "Invalid username or password"}), 401
             
     elif request.method == 'DELETE':
+        session.pop('logged_in', None)
         return jsonify({"success": True})
 
 @app.route('/api/keys', methods=['GET', 'POST'])
 def manage_keys():
+    if not session.get('logged_in'):
+        return jsonify({"error": "Unauthorized"}), 401
+    
     if request.method == 'GET':
         return jsonify({"keys": licenses})
         
@@ -70,6 +76,9 @@ def manage_keys():
 
 @app.route('/api/keys/<string:key_id>', methods=['POST'])
 def update_key(key_id):
+    if not session.get('logged_in'):
+        return jsonify({"error": "Unauthorized"}), 401
+        
     data = request.get_json() or {}
     action = data.get('action')
     
