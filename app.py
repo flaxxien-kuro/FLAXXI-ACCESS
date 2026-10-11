@@ -16,34 +16,30 @@ licenses = []
 def index():
     return render_template('index.html')
 
-# Advanced Runtime Endpoint with all possible flags
+# Release & Runtime endpoints jo Loader 1.5 check karta hai
 @app.route('/api/runtime', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/runtimes', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/v1/runtime', methods=['GET', 'POST', 'OPTIONS'])
-def runtime_data():
-    return jsonify({
-        "success": True,
-        "status": "published",
+@app.route('/api/releases', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/version', methods=['GET', 'POST', 'OPTIONS'])
+def release_data():
+    release_obj = {
+        "version": "1.5",
+        "name": "Loader 1.5",
+        "tag_name": "1.5",
+        "url": "https://flaxxi-access.onrender.com",
+        "download_url": "https://flaxxi-access.onrender.com",
         "published": True,
         "isPublished": True,
-        "active": True,
-        "runtime": {
-            "version": "1.6",
-            "url": "https://flaxxi-access.onrender.com",
-            "published": True,
-            "isPublished": True
-        },
-        "data": {
-            "version": "1.6",
-            "published": True,
-            "isPublished": True
-        },
-        "runtimes": [{
-            "version": "1.6",
-            "url": "https://flaxxi-access.onrender.com",
-            "published": True,
-            "isPublished": True
-        }]
+        "active": True
+    }
+    return jsonify({
+        "success": True,
+        "published": True,
+        "isPublished": True,
+        "release": release_obj,
+        "releases": [release_obj],
+        "data": [release_obj],
+        "items": [release_obj]
     })
 
 @app.route('/api/validate', methods=['POST', 'OPTIONS'])
@@ -138,23 +134,22 @@ def update_key(key_id):
 
 @app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 def catch_all(subpath):
+    release_obj = {
+        "version": "1.5",
+        "name": "Loader 1.5",
+        "tag_name": "1.5",
+        "url": "https://flaxxi-access.onrender.com",
+        "published": True,
+        "isPublished": True
+    }
     return jsonify({
-        "status": "published",
         "success": True,
         "published": True,
         "isPublished": True,
-        "message": "Connected to Kuro server",
-        "version": "1.6",
-        "runtime": {
-            "version": "1.6",
-            "published": True,
-            "isPublished": True
-        },
-        "runtimes": [{
-            "version": "1.6",
-            "published": True,
-            "isPublished": True
-        }]
+        "release": release_obj,
+        "releases": [release_obj],
+        "data": [release_obj],
+        "message": "Connected to Kuro server"
     })
 
 if __name__ == '__main__':
