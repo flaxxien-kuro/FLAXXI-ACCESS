@@ -16,21 +16,33 @@ licenses = []
 def index():
     return render_template('index.html')
 
-# KuroRuntime endpoint jise APK check karta hai
+# Advanced Runtime Endpoint with all possible flags
 @app.route('/api/runtime', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/runtimes', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/v1/runtime', methods=['GET', 'POST', 'OPTIONS'])
 def runtime_data():
     return jsonify({
         "success": True,
+        "status": "published",
+        "published": True,
+        "isPublished": True,
+        "active": True,
         "runtime": {
             "version": "1.6",
             "url": "https://flaxxi-access.onrender.com",
-            "published": True
+            "published": True,
+            "isPublished": True
+        },
+        "data": {
+            "version": "1.6",
+            "published": True,
+            "isPublished": True
         },
         "runtimes": [{
             "version": "1.6",
             "url": "https://flaxxi-access.onrender.com",
-            "published": True
+            "published": True,
+            "isPublished": True
         }]
     })
 
@@ -127,11 +139,22 @@ def update_key(key_id):
 @app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 def catch_all(subpath):
     return jsonify({
-        "status": "online",
+        "status": "published",
         "success": True,
         "published": True,
+        "isPublished": True,
         "message": "Connected to Kuro server",
-        "version": "1.6"
+        "version": "1.6",
+        "runtime": {
+            "version": "1.6",
+            "published": True,
+            "isPublished": True
+        },
+        "runtimes": [{
+            "version": "1.6",
+            "published": True,
+            "isPublished": True
+        }]
     })
 
 if __name__ == '__main__':
