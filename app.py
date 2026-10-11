@@ -16,29 +16,27 @@ licenses = []
 def index():
     return render_template('index.html')
 
-# Exhaustive Payload for Loader 1.5 KuroRuntime validation
-def get_kuro_runtime_payload():
-    runtime_dict = {
+# GitHub-compatible Release & Runtime Handler for Loader 1.5
+def get_release_payload():
+    release_obj = {
+        "tag_name": "1.5",
+        "name": "1.5",
         "version": "1.5",
-        "name": "KuroRuntime 1.5",
+        "url": "https://flaxxi-access.onrender.com",
+        "download_url": "https://flaxxi-access.onrender.com",
         "published": True,
         "isPublished": True,
-        "status": "published",
         "active": True,
-        "url": "https://flaxxi-access.onrender.com"
+        "draft": False,
+        "prerelease": False,
+        "assets": [
+            {
+                "name": "runtime.apk",
+                "browser_download_url": "https://flaxxi-access.onrender.com"
+            }
+        ]
     }
-    return jsonify({
-        "success": True,
-        "published": True,
-        "isPublished": True,
-        "status": "published",
-        "active": True,
-        "KuroRuntime": [runtime_dict],
-        "runtime": runtime_dict,
-        "runtimes": [runtime_dict],
-        "releases": [runtime_dict],
-        "data": [runtime_dict]
-    })
+    return jsonify([release_obj])
 
 @app.route('/api/runtime', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/runtimes', methods=['GET', 'POST', 'OPTIONS'])
@@ -46,8 +44,8 @@ def get_kuro_runtime_payload():
 @app.route('/api/version', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/update', methods=['GET', 'POST', 'OPTIONS'])
-def runtime_api():
-    return get_kuro_runtime_payload()
+def release_endpoints():
+    return get_release_payload()
 
 @app.route('/api/validate', methods=['POST', 'OPTIONS'])
 def validate_license():
@@ -141,7 +139,7 @@ def update_key(key_id):
 
 @app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 def catch_all(subpath):
-    return get_kuro_runtime_payload()
+    return get_release_payload()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
