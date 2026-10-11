@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, jsonify
+from flask import Flask, render_template, request, session, jsonify, Response
 import os
 import random
 import string
@@ -16,25 +16,15 @@ licenses = []
 def index():
     return render_template('index.html')
 
-# Universal Release & Runtime Handler for Loader 1.5
+# Loader 1.5 ke liye Plain Text Version/Diagnostics Handler
 @app.route('/api/runtime', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/runtimes', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/releases', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/version', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
-def release_data():
-    release_item = {
-        "version": "1.5",
-        "tag_name": "1.5",
-        "name": "Loader 1.5",
-        "url": "https://flaxxi-access.onrender.com",
-        "download_url": "https://flaxxi-access.onrender.com",
-        "published": True,
-        "isPublished": True,
-        "active": True
-    }
-    # Return a JSON list directly since Loader 1.5 likely expects a JSONArray of releases
-    return jsonify([release_item])
+@app.route('/api/update', methods=['GET', 'POST', 'OPTIONS'])
+def plain_version_handler():
+    return Response("1.5", mimetype="text/plain")
 
 @app.route('/api/validate', methods=['POST', 'OPTIONS'])
 def validate_license():
@@ -128,15 +118,7 @@ def update_key(key_id):
 
 @app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 def catch_all(subpath):
-    release_item = {
-        "version": "1.5",
-        "tag_name": "1.5",
-        "name": "Loader 1.5",
-        "url": "https://flaxxi-access.onrender.com",
-        "published": True,
-        "isPublished": True
-    }
-    return jsonify([release_item])
+    return Response("1.5", mimetype="text/plain")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
