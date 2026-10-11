@@ -16,6 +16,30 @@ licenses = []
 def index():
     return render_template('index.html')
 
+# Diagnostics / Loader API endpoint jo app check karta hai
+@app.route('/api/diagnostics', methods=['GET', 'POST'])
+def diagnostics():
+    return jsonify({"status": "online", "message": "Kuro system connected successfully"})
+
+# App license validation endpoint
+@app.route('/api/validate', methods=['POST'])
+def validate_license():
+    data = request.get_json() or {}
+    key = data.get('key')
+    
+    for k in licenses:
+        if k['key'] == key and not k['revoked']:
+            if k['expires'] > time.time():
+                if k['devices'] < k['device_limit']:
+                    k['devices'] += 1
+                    return jsonify({"success": True, "message": "License valid"})
+                else:
+                    return jsonify({"error": "Device limit reached"}), 400
+            else:
+                return jsonify({"error": "License expired"}), 400
+                
+    return jsonify({"error": "Invalid license key"}), 400
+
 @app.route('/api/session', methods=['GET', 'POST', 'DELETE'])
 def session_manager():
     if request.method == 'GET':
@@ -90,7 +114,7 @@ def update_key(key_id):
                 k['revoked'] = False
             elif action == 'reset_devices':
                 k['devices'] = 0
-            return jsonify({"success": True})
+            return jsonify({"success": "success"})
             
     return jsonify({"error": "Key not found"}), 404
 
