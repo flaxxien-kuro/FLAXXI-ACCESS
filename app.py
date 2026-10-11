@@ -16,10 +16,30 @@ licenses = []
 def index():
     return render_template('index.html')
 
-# 1. Runtime endpoints: JSON Object with KuroRuntime dictionary
+# 1. Runtime endpoints: MUST be a JSON Array containing the published runtime object
 @app.route('/api/runtime', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/runtimes', methods=['GET', 'POST', 'OPTIONS'])
 def api_runtime():
+    runtime_obj = {
+        "version": "1.5",
+        "latestVersion": "1.5",
+        "tag_name": "1.5",
+        "name": "1.5",
+        "published": True,
+        "isPublished": True,
+        "status": "published",
+        "active": True,
+        "url": "https://flaxxi-access.onrender.com",
+        "download_url": "https://flaxxi-access.onrender.com"
+    }
+    return jsonify([runtime_obj])
+
+# 2. Releases, Version & Update endpoints: JSON Object format
+@app.route('/api/releases', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/version', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/update', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
+def api_releases():
     runtime_obj = {
         "version": "1.5",
         "latestVersion": "1.5",
@@ -36,38 +56,12 @@ def api_runtime():
         "success": True,
         "published": True,
         "isPublished": True,
-        "KuroRuntime": runtime_obj,
-        "runtime": runtime_obj,
-        "runtimes": [runtime_obj]
-    })
-
-# 2. Releases, Version & Update endpoints: Strictly JSON Object (Not an array)
-@app.route('/api/releases', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/version', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/update', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
-def api_releases():
-    return jsonify({
-        "success": True,
-        "published": True,
-        "isPublished": True,
         "version": "1.5",
         "latestVersion": "1.5",
-        "tag_name": "1.5",
-        "name": "1.5",
-        "status": "published",
-        "active": True,
         "hasUpdate": False,
         "isUpdateAvailable": False,
-        "url": "https://flaxxi-access.onrender.com",
-        "download_url": "https://flaxxi-access.onrender.com",
-        "browser_download_url": "https://flaxxi-access.onrender.com",
-        "assets": [
-            {
-                "name": "runtime.apk",
-                "browser_download_url": "https://flaxxi-access.onrender.com"
-            }
-        ]
+        "KuroRuntime": runtime_obj,
+        "data": runtime_obj
     })
 
 @app.route('/api/validate', methods=['POST', 'OPTIONS'])
@@ -162,14 +156,12 @@ def update_key(key_id):
 
 @app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 def catch_all(subpath):
-    return jsonify({
-        "success": True,
-        "published": True,
-        "isPublished": True,
+    runtime_obj = {
         "version": "1.5",
-        "latestVersion": "1.5",
-        "url": "https://flaxxi-access.onrender.com"
-    })
+        "published": True,
+        "isPublished": True
+    }
+    return jsonify([runtime_obj])
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
