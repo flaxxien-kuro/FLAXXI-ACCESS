@@ -16,9 +16,8 @@ licenses = []
 def index():
     return render_template('index.html')
 
-# Absolute Master Payload combining both Object and Array formats for Loader 1.5
-def get_ultimate_payload():
-    item = {
+def get_kuro_fixed_payload():
+    runtime_dict = {
         "version": "1.5",
         "tag_name": "1.5",
         "name": "1.5",
@@ -38,11 +37,11 @@ def get_ultimate_payload():
         "version": "1.5",
         "tag_name": "1.5",
         "update": False,
-        "data": item,
-        "release": item,
-        "releases": [item],
-        "runtimes": [item],
-        "KuroRuntime": [item]
+        "KuroRuntime": runtime_dict,
+        "runtime": runtime_dict,
+        "runtimes": [runtime_dict],
+        "releases": [runtime_dict],
+        "data": runtime_dict
     })
 
 @app.route('/api/runtime', methods=['GET', 'POST', 'OPTIONS'])
@@ -52,7 +51,7 @@ def get_ultimate_payload():
 @app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/update', methods=['GET', 'POST', 'OPTIONS'])
 def loader_handler():
-    return get_ultimate_payload()
+    return get_kuro_fixed_payload()
 
 @app.route('/api/validate', methods=['POST', 'OPTIONS'])
 def validate_license():
@@ -146,7 +145,7 @@ def update_key(key_id):
 
 @app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 def catch_all(subpath):
-    return get_ultimate_payload()
+    return get_kuro_fixed_payload()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
