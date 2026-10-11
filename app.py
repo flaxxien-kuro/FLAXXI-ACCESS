@@ -41,45 +41,38 @@ def api_runtime():
         "runtimes": [runtime_item]
     })
 
-# 2. Diagnostics, Releases, Version & Update Endpoints (Covering all APK paths)
+# 2. Releases, Version & Update Endpoints (GitHub-style Release Array & Object)
 @app.route('/api/releases', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/version', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/update', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
-def api_diagnostics_and_updates():
-    runtime_item = {
+def api_releases_endpoint():
+    release_item = {
+        "id": 1,
+        "tag_name": "1.5",
+        "name": "1.5 Version",
         "version": "1.5",
         "latestVersion": "1.5",
-        "tag_name": "1.5",
-        "name": "1.5",
         "published": True,
         "isPublished": True,
-        "status": "published",
-        "active": True,
-        "hasUpdate": False,
-        "isUpdateAvailable": False,
+        "draft": False,
+        "prerelease": False,
+        "body": "Stable release for Kuro Night Byte Loader v1.5",
         "url": "https://flaxxi-access.onrender.com",
         "download_url": "https://flaxxi-access.onrender.com",
         "browser_download_url": "https://flaxxi-access.onrender.com",
         "assets": [
             {
                 "name": "runtime.apk",
+                "size": 1024,
                 "browser_download_url": "https://flaxxi-access.onrender.com"
             }
         ]
     }
-    return jsonify({
-        "success": True,
-        "published": True,
-        "isPublished": True,
-        "version": "1.5",
-        "latestVersion": "1.5",
-        "hasUpdate": False,
-        "isUpdateAvailable": False,
-        "KuroRuntime": [runtime_item],
-        "runtime": runtime_item,
-        "runtimes": [runtime_item]
-    })
+    # Some parsers expect an array of releases, some expect an object. We support both via request path or return array.
+    if 'releases' in request.path:
+        return jsonify([release_item])
+    return jsonify(release_item)
 
 # 3. License Validation Endpoint
 @app.route('/api/validate', methods=['POST', 'OPTIONS'])
@@ -177,20 +170,12 @@ def update_key(key_id):
 # 6. Fallback Catch-All
 @app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 def catch_all(subpath):
-    runtime_item = {
-        "version": "1.5",
-        "latestVersion": "1.5",
-        "published": True,
-        "isPublished": True,
-        "status": "published",
-        "active": True
-    }
     return jsonify({
-        "success": True,
+        "tag_name": "1.5",
+        "name": "1.5",
         "published": True,
         "isPublished": True,
-        "KuroRuntime": [runtime_item],
-        "runtime": runtime_item
+        "assets": []
     })
 
 if __name__ == '__main__':
