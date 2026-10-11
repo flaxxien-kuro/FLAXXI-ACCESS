@@ -16,37 +16,25 @@ licenses = []
 def index():
     return render_template('index.html')
 
-# Universal Runtime & Release Handler
-def get_runtime_response():
-    runtime_item = {
-        "version": "1.5",
-        "name": "Loader 1.5",
-        "published": True,
-        "isPublished": True,
-        "status": "published",
-        "active": True,
-        "url": "https://flaxxi-access.onrender.com"
-    }
-    return jsonify({
-        "success": True,
-        "published": True,
-        "isPublished": True,
-        "status": "published",
-        "active": True,
-        "KuroRuntime": runtime_item,
-        "runtime": runtime_item,
-        "runtimes": [runtime_item],
-        "releases": [runtime_item],
-        "data": runtime_item
-    })
-
+# Universal Release & Runtime Handler for Loader 1.5
 @app.route('/api/runtime', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/runtimes', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/releases', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/version', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
-def runtime_endpoints():
-    return get_runtime_response()
+def release_data():
+    release_item = {
+        "version": "1.5",
+        "tag_name": "1.5",
+        "name": "Loader 1.5",
+        "url": "https://flaxxi-access.onrender.com",
+        "download_url": "https://flaxxi-access.onrender.com",
+        "published": True,
+        "isPublished": True,
+        "active": True
+    }
+    # Return a JSON list directly since Loader 1.5 likely expects a JSONArray of releases
+    return jsonify([release_item])
 
 @app.route('/api/validate', methods=['POST', 'OPTIONS'])
 def validate_license():
@@ -140,7 +128,15 @@ def update_key(key_id):
 
 @app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 def catch_all(subpath):
-    return get_runtime_response()
+    release_item = {
+        "version": "1.5",
+        "tag_name": "1.5",
+        "name": "Loader 1.5",
+        "url": "https://flaxxi-access.onrender.com",
+        "published": True,
+        "isPublished": True
+    }
+    return jsonify([release_item])
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
