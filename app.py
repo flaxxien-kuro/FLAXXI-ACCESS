@@ -16,42 +16,42 @@ licenses = []
 def index():
     return render_template('index.html')
 
-# 1. Runtime / Diagnostics checks ke liye JSON Object
-@app.route('/api/runtime', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/runtimes', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
-def runtime_endpoint():
-    runtime_info = {
+# Ultimate Update & Release Payload for Loader 1.5
+def get_update_payload():
+    update_data = {
         "version": "1.5",
+        "tag_name": "1.5",
+        "name": "1.5",
+        "url": "https://flaxxi-access.onrender.com",
+        "download_url": "https://flaxxi-access.onrender.com",
+        "changelog": "Stable release",
         "published": True,
         "isPublished": True,
-        "status": "published",
         "active": True,
-        "url": "https://flaxxi-access.onrender.com"
+        "force_update": False,
+        "update": False
     }
     return jsonify({
         "success": True,
         "published": True,
         "isPublished": True,
-        "KuroRuntime": runtime_info,
-        "runtime": runtime_info
+        "version": "1.5",
+        "update": False,
+        "data": update_data,
+        "release": update_data,
+        "releases": [update_data],
+        "runtimes": [update_data],
+        "KuroRuntime": update_data
     })
 
-# 2. Releases / Version / Update checks ke liye JSON Array ([...])
+@app.route('/api/runtime', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/runtimes', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/releases', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/version', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/update', methods=['GET', 'POST', 'OPTIONS'])
-def releases_endpoint():
-    release_obj = {
-        "tag_name": "1.5",
-        "name": "1.5",
-        "version": "1.5",
-        "published": True,
-        "isPublished": True,
-        "url": "https://flaxxi-access.onrender.com",
-        "browser_download_url": "https://flaxxi-access.onrender.com"
-    }
-    return jsonify([release_obj])
+def update_endpoints():
+    return get_update_payload()
 
 @app.route('/api/validate', methods=['POST', 'OPTIONS'])
 def validate_license():
@@ -145,14 +145,7 @@ def update_key(key_id):
 
 @app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 def catch_all(subpath):
-    release_obj = {
-        "tag_name": "1.5",
-        "name": "1.5",
-        "version": "1.5",
-        "published": True,
-        "isPublished": True
-    }
-    return jsonify([release_obj])
+    return get_update_payload()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
