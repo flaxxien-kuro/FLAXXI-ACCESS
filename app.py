@@ -16,31 +16,37 @@ licenses = []
 def index():
     return render_template('index.html')
 
-# Release & Runtime endpoints jo Loader 1.5 check karta hai
-@app.route('/api/runtime', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/runtimes', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/releases', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/version', methods=['GET', 'POST', 'OPTIONS'])
-def release_data():
-    release_obj = {
+# Universal Runtime & Release Handler
+def get_runtime_response():
+    runtime_item = {
         "version": "1.5",
         "name": "Loader 1.5",
-        "tag_name": "1.5",
-        "url": "https://flaxxi-access.onrender.com",
-        "download_url": "https://flaxxi-access.onrender.com",
         "published": True,
         "isPublished": True,
-        "active": True
+        "status": "published",
+        "active": True,
+        "url": "https://flaxxi-access.onrender.com"
     }
     return jsonify({
         "success": True,
         "published": True,
         "isPublished": True,
-        "release": release_obj,
-        "releases": [release_obj],
-        "data": [release_obj],
-        "items": [release_obj]
+        "status": "published",
+        "active": True,
+        "KuroRuntime": runtime_item,
+        "runtime": runtime_item,
+        "runtimes": [runtime_item],
+        "releases": [runtime_item],
+        "data": runtime_item
     })
+
+@app.route('/api/runtime', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/runtimes', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/releases', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/version', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
+def runtime_endpoints():
+    return get_runtime_response()
 
 @app.route('/api/validate', methods=['POST', 'OPTIONS'])
 def validate_license():
@@ -134,23 +140,7 @@ def update_key(key_id):
 
 @app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 def catch_all(subpath):
-    release_obj = {
-        "version": "1.5",
-        "name": "Loader 1.5",
-        "tag_name": "1.5",
-        "url": "https://flaxxi-access.onrender.com",
-        "published": True,
-        "isPublished": True
-    }
-    return jsonify({
-        "success": True,
-        "published": True,
-        "isPublished": True,
-        "release": release_obj,
-        "releases": [release_obj],
-        "data": [release_obj],
-        "message": "Connected to Kuro server"
-    })
+    return get_runtime_response()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
