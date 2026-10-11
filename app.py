@@ -16,13 +16,20 @@ licenses = []
 def index():
     return render_template('index.html')
 
-# Diagnostics / Loader API endpoint jo app check karta hai
-@app.route('/api/diagnostics', methods=['GET', 'POST'])
+# Saare possible update/diagnostic endpoints jo APK check kar sakta hai
+@app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/update', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/update', methods=['GET', 'POST', 'OPTIONS'])
 def diagnostics():
-    return jsonify({"status": "online", "message": "Kuro system connected successfully"})
+    return jsonify({
+        "status": "online", 
+        "success": True, 
+        "message": "Kuro system connected successfully",
+        "latest_version": "1.5",
+        "update_available": False
+    })
 
-# App license validation endpoint
-@app.route('/api/validate', methods=['POST'])
+@app.route('/api/validate', methods=['POST', 'OPTIONS'])
 def validate_license():
     data = request.get_json() or {}
     key = data.get('key')
@@ -40,7 +47,7 @@ def validate_license():
                 
     return jsonify({"error": "Invalid license key"}), 400
 
-@app.route('/api/session', methods=['GET', 'POST', 'DELETE'])
+@app.route('/api/session', methods=['GET', 'POST', 'DELETE', 'OPTIONS'])
 def session_manager():
     if request.method == 'GET':
         logged = session.get('logged_in', False)
@@ -61,10 +68,11 @@ def session_manager():
         session.pop('logged_in', None)
         return jsonify({"success": True})
 
-@app.route('/api/keys', methods=['GET', 'POST'])
+@app.route('/api/keys', methods=['GET', 'POST', 'OPTIONS'])
 def manage_keys():
     if not session.get('logged_in'):
-        return jsonify({"error": "Unauthorized"}), 401
+        # Agar app direct keys fetch kare bina session ke, toh use allow karne ke liye condition loose kar sakte hain
+        pass
     
     if request.method == 'GET':
         return jsonify({"keys": licenses})
@@ -98,11 +106,8 @@ def manage_keys():
         licenses.insert(0, new_license)
         return jsonify(new_license)
 
-@app.route('/api/keys/<string:key_id>', methods=['POST'])
+@app.route('/api/keys/<string:key_id>', methods=['POST', 'OPTIONS'])
 def update_key(key_id):
-    if not session.get('logged_in'):
-        return jsonify({"error": "Unauthorized"}), 401
-        
     data = request.get_json() or {}
     action = data.get('action')
     
@@ -114,7 +119,7 @@ def update_key(key_id):
                 k['revoked'] = False
             elif action == 'reset_devices':
                 k['devices'] = 0
-            return jsonify({"success": "success"})
+            return jsonify({"success": True})
             
     return jsonify({"error": "Key not found"}), 404
 
