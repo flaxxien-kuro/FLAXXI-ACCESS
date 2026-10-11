@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, jsonify, Response
+from flask import Flask, render_template, request, session, jsonify
 import os
 import random
 import string
@@ -16,15 +16,33 @@ licenses = []
 def index():
     return render_template('index.html')
 
-# Loader 1.5 ke liye Plain Text Version/Diagnostics Handler
+# Universal JSON Handler for Loader 1.5
+def master_loader_response():
+    return jsonify({
+        "status": "success",
+        "success": True,
+        "published": True,
+        "isPublished": True,
+        "active": True,
+        "version": "1.5",
+        "latest": "1.5",
+        "update": False,
+        "data": {
+            "version": "1.5",
+            "published": True,
+            "isPublished": True,
+            "url": "https://flaxxi-access.onrender.com"
+        }
+    })
+
 @app.route('/api/runtime', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/runtimes', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/releases', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/version', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/update', methods=['GET', 'POST', 'OPTIONS'])
-def plain_version_handler():
-    return Response("1.5", mimetype="text/plain")
+def handle_loader_checks():
+    return master_loader_response()
 
 @app.route('/api/validate', methods=['POST', 'OPTIONS'])
 def validate_license():
@@ -118,7 +136,7 @@ def update_key(key_id):
 
 @app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 def catch_all(subpath):
-    return Response("1.5", mimetype="text/plain")
+    return master_loader_response()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
