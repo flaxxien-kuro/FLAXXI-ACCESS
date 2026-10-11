@@ -16,7 +16,10 @@ licenses = []
 def index():
     return render_template('index.html')
 
-def get_kuro_fixed_payload():
+# 1. Runtime / Runtimes: STRICTLY JSON Object
+@app.route('/api/runtime', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/runtimes', methods=['GET', 'POST', 'OPTIONS'])
+def api_runtime():
     runtime_dict = {
         "version": "1.5",
         "tag_name": "1.5",
@@ -32,26 +35,28 @@ def get_kuro_fixed_payload():
         "success": True,
         "published": True,
         "isPublished": True,
-        "status": "published",
-        "active": True,
-        "version": "1.5",
-        "tag_name": "1.5",
-        "update": False,
         "KuroRuntime": runtime_dict,
-        "runtime": runtime_dict,
-        "runtimes": [runtime_dict],
-        "releases": [runtime_dict],
-        "data": runtime_dict
+        "runtime": runtime_dict
     })
 
-@app.route('/api/runtime', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/runtimes', methods=['GET', 'POST', 'OPTIONS'])
+# 2. Releases / Version / Update / Diagnostics: STRICTLY JSON Array [...]
 @app.route('/api/releases', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/version', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/update', methods=['GET', 'POST', 'OPTIONS'])
-def loader_handler():
-    return get_kuro_fixed_payload()
+@app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
+def api_releases():
+    release_obj = {
+        "version": "1.5",
+        "tag_name": "1.5",
+        "name": "1.5",
+        "published": True,
+        "isPublished": True,
+        "status": "published",
+        "active": True,
+        "url": "https://flaxxi-access.onrender.com",
+        "download_url": "https://flaxxi-access.onrender.com"
+    }
+    return jsonify([release_obj])
 
 @app.route('/api/validate', methods=['POST', 'OPTIONS'])
 def validate_license():
@@ -145,7 +150,13 @@ def update_key(key_id):
 
 @app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 def catch_all(subpath):
-    return get_kuro_fixed_payload()
+    release_obj = {
+        "version": "1.5",
+        "tag_name": "1.5",
+        "published": True,
+        "isPublished": True
+    }
+    return jsonify([release_obj])
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
