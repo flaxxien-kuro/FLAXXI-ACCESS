@@ -16,42 +16,49 @@ licenses = []
 def index():
     return render_template('index.html')
 
-# Ultimate Update & Release Payload for Loader 1.5
-def get_update_payload():
-    update_data = {
+# Runtime endpoints ke liye JSON Array format jisse "No KuroRuntime is published" fix ho jaye
+@app.route('/api/runtime', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/runtimes', methods=['GET', 'POST', 'OPTIONS'])
+def runtime_array_endpoint():
+    runtime_obj = {
         "version": "1.5",
         "tag_name": "1.5",
         "name": "1.5",
-        "url": "https://flaxxi-access.onrender.com",
-        "download_url": "https://flaxxi-access.onrender.com",
-        "changelog": "Stable release",
         "published": True,
         "isPublished": True,
+        "status": "published",
         "active": True,
-        "force_update": False,
-        "update": False
+        "url": "https://flaxxi-access.onrender.com",
+        "download_url": "https://flaxxi-access.onrender.com"
+    }
+    return jsonify([runtime_obj])
+
+# Releases, Version aur Diagnostics ke liye Object + Array format
+@app.route('/api/releases', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/version', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/update', methods=['GET', 'POST', 'OPTIONS'])
+def general_endpoints():
+    runtime_obj = {
+        "version": "1.5",
+        "tag_name": "1.5",
+        "name": "1.5",
+        "published": True,
+        "isPublished": True,
+        "status": "published",
+        "active": True,
+        "url": "https://flaxxi-access.onrender.com"
     }
     return jsonify({
         "success": True,
         "published": True,
         "isPublished": True,
-        "version": "1.5",
-        "update": False,
-        "data": update_data,
-        "release": update_data,
-        "releases": [update_data],
-        "runtimes": [update_data],
-        "KuroRuntime": update_data
+        "KuroRuntime": [runtime_obj],
+        "runtime": runtime_obj,
+        "runtimes": [runtime_obj],
+        "releases": [runtime_obj],
+        "data": [runtime_obj]
     })
-
-@app.route('/api/runtime', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/runtimes', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/releases', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/version', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/update', methods=['GET', 'POST', 'OPTIONS'])
-def update_endpoints():
-    return get_update_payload()
 
 @app.route('/api/validate', methods=['POST', 'OPTIONS'])
 def validate_license():
@@ -145,7 +152,13 @@ def update_key(key_id):
 
 @app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 def catch_all(subpath):
-    return get_update_payload()
+    runtime_obj = {
+        "version": "1.5",
+        "published": True,
+        "isPublished": True,
+        "status": "published"
+    }
+    return jsonify([runtime_obj])
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
