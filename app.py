@@ -16,27 +16,33 @@ licenses = []
 def index():
     return render_template('index.html')
 
-# GitHub-compatible Release & Runtime Handler for Loader 1.5
-def get_release_payload():
-    release_obj = {
+# Master Combined Payload for Loader 1.5 (Handles both KuroRuntime and Release info checks)
+def get_master_payload():
+    runtime_info = {
+        "version": "1.5",
         "tag_name": "1.5",
         "name": "1.5",
-        "version": "1.5",
-        "url": "https://flaxxi-access.onrender.com",
-        "download_url": "https://flaxxi-access.onrender.com",
         "published": True,
         "isPublished": True,
+        "status": "published",
         "active": True,
-        "draft": False,
-        "prerelease": False,
-        "assets": [
-            {
-                "name": "runtime.apk",
-                "browser_download_url": "https://flaxxi-access.onrender.com"
-            }
-        ]
+        "url": "https://flaxxi-access.onrender.com",
+        "download_url": "https://flaxxi-access.onrender.com"
     }
-    return jsonify([release_obj])
+    return jsonify({
+        "success": True,
+        "published": True,
+        "isPublished": True,
+        "status": "published",
+        "active": True,
+        "version": "1.5",
+        "tag_name": "1.5",
+        "KuroRuntime": runtime_info,
+        "runtime": runtime_info,
+        "runtimes": [runtime_info],
+        "releases": [runtime_info],
+        "data": runtime_info
+    })
 
 @app.route('/api/runtime', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/runtimes', methods=['GET', 'POST', 'OPTIONS'])
@@ -44,8 +50,8 @@ def get_release_payload():
 @app.route('/api/version', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/update', methods=['GET', 'POST', 'OPTIONS'])
-def release_endpoints():
-    return get_release_payload()
+def loader_endpoints():
+    return get_master_payload()
 
 @app.route('/api/validate', methods=['POST', 'OPTIONS'])
 def validate_license():
@@ -139,7 +145,7 @@ def update_key(key_id):
 
 @app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 def catch_all(subpath):
-    return get_release_payload()
+    return get_master_payload()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
