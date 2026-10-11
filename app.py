@@ -16,12 +16,13 @@ licenses = []
 def index():
     return render_template('index.html')
 
-# 1. Runtime / Runtimes: STRICTLY JSON Object
+# 1. Runtime / Runtimes: JSON Object
 @app.route('/api/runtime', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/runtimes', methods=['GET', 'POST', 'OPTIONS'])
 def api_runtime():
     runtime_dict = {
         "version": "1.5",
+        "latestVersion": "1.5",
         "tag_name": "1.5",
         "name": "1.5",
         "published": True,
@@ -29,34 +30,53 @@ def api_runtime():
         "status": "published",
         "active": True,
         "url": "https://flaxxi-access.onrender.com",
+        "updateUrl": "https://flaxxi-access.onrender.com",
         "download_url": "https://flaxxi-access.onrender.com"
     }
     return jsonify({
         "success": True,
         "published": True,
         "isPublished": True,
+        "hasUpdate": False,
+        "isUpdateAvailable": False,
         "KuroRuntime": runtime_dict,
         "runtime": runtime_dict
     })
 
-# 2. Releases / Version / Update / Diagnostics: STRICTLY JSON Array [...]
+# 2. Releases / Version / Update / Diagnostics: Comprehensive Update Payload
 @app.route('/api/releases', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/version', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/update', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
 def api_releases():
-    release_obj = {
+    update_obj = {
         "version": "1.5",
+        "latestVersion": "1.5",
         "tag_name": "1.5",
         "name": "1.5",
         "published": True,
         "isPublished": True,
         "status": "published",
         "active": True,
+        "hasUpdate": False,
+        "isUpdateAvailable": False,
         "url": "https://flaxxi-access.onrender.com",
+        "updateUrl": "https://flaxxi-access.onrender.com",
         "download_url": "https://flaxxi-access.onrender.com"
     }
-    return jsonify([release_obj])
+    return jsonify({
+        "success": True,
+        "published": True,
+        "isPublished": True,
+        "hasUpdate": False,
+        "isUpdateAvailable": False,
+        "version": "1.5",
+        "latestVersion": "1.5",
+        "data": update_obj,
+        "release": update_obj,
+        "releases": [update_obj],
+        "runtimes": [update_obj]
+    })
 
 @app.route('/api/validate', methods=['POST', 'OPTIONS'])
 def validate_license():
@@ -150,13 +170,14 @@ def update_key(key_id):
 
 @app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 def catch_all(subpath):
-    release_obj = {
+    update_obj = {
         "version": "1.5",
-        "tag_name": "1.5",
+        "latestVersion": "1.5",
         "published": True,
-        "isPublished": True
+        "isPublished": True,
+        "hasUpdate": False
     }
-    return jsonify([release_obj])
+    return jsonify(update_obj)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
