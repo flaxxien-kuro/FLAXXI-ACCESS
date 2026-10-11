@@ -16,7 +16,24 @@ licenses = []
 def index():
     return render_template('index.html')
 
-# License Validation Endpoint
+# KuroRuntime endpoint jise APK check karta hai
+@app.route('/api/runtime', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/runtimes', methods=['GET', 'POST', 'OPTIONS'])
+def runtime_data():
+    return jsonify({
+        "success": True,
+        "runtime": {
+            "version": "1.6",
+            "url": "https://flaxxi-access.onrender.com",
+            "published": True
+        },
+        "runtimes": [{
+            "version": "1.6",
+            "url": "https://flaxxi-access.onrender.com",
+            "published": True
+        }]
+    })
+
 @app.route('/api/validate', methods=['POST', 'OPTIONS'])
 def validate_license():
     data = request.get_json() or {}
@@ -35,7 +52,6 @@ def validate_license():
                 
     return jsonify({"error": "Invalid license key"}), 400
 
-# Session Management
 @app.route('/api/session', methods=['GET', 'POST', 'DELETE', 'OPTIONS'])
 def session_manager():
     if request.method == 'GET':
@@ -57,7 +73,6 @@ def session_manager():
         session.pop('logged_in', None)
         return jsonify({"success": True})
 
-# Key Management
 @app.route('/api/keys', methods=['GET', 'POST', 'OPTIONS'])
 def manage_keys():
     if request.method == 'GET':
@@ -109,14 +124,14 @@ def update_key(key_id):
             
     return jsonify({"error": "Key not found"}), 404
 
-# CATCH-ALL ROUTE: Agar app koi bhi aur URL maange jo upar nahi hai, toh 404 ki jagah success dega
 @app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 def catch_all(subpath):
     return jsonify({
         "status": "online",
         "success": True,
+        "published": True,
         "message": "Connected to Kuro server",
-        "version": "1.5"
+        "version": "1.6"
     })
 
 if __name__ == '__main__':
