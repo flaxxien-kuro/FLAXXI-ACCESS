@@ -16,7 +16,7 @@ licenses = []
 def index():
     return render_template('index.html')
 
-# 1. Runtime endpoints: Strictly JSON Object with KuroRuntime dictionary
+# 1. Runtime endpoints: JSON Object with KuroRuntime dictionary
 @app.route('/api/runtime', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/runtimes', methods=['GET', 'POST', 'OPTIONS'])
 def api_runtime():
@@ -41,19 +41,20 @@ def api_runtime():
         "runtimes": [runtime_obj]
     })
 
-# 2. Releases & Update endpoints: Strictly JSON Array [...] with release metadata
+# 2. Releases, Version & Update endpoints: Strictly JSON Object (Not an array)
 @app.route('/api/releases', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/version', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/update', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
 def api_releases():
-    release_item = {
+    return jsonify({
+        "success": True,
+        "published": True,
+        "isPublished": True,
         "version": "1.5",
         "latestVersion": "1.5",
         "tag_name": "1.5",
         "name": "1.5",
-        "published": True,
-        "isPublished": True,
         "status": "published",
         "active": True,
         "hasUpdate": False,
@@ -67,8 +68,7 @@ def api_releases():
                 "browser_download_url": "https://flaxxi-access.onrender.com"
             }
         ]
-    }
-    return jsonify([release_item])
+    })
 
 @app.route('/api/validate', methods=['POST', 'OPTIONS'])
 def validate_license():
@@ -162,14 +162,14 @@ def update_key(key_id):
 
 @app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 def catch_all(subpath):
-    release_item = {
-        "version": "1.5",
-        "tag_name": "1.5",
+    return jsonify({
+        "success": True,
         "published": True,
         "isPublished": True,
+        "version": "1.5",
+        "latestVersion": "1.5",
         "url": "https://flaxxi-access.onrender.com"
-    }
-    return jsonify([release_item])
+    })
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
