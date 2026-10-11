@@ -16,31 +16,11 @@ licenses = []
 def index():
     return render_template('index.html')
 
-# 1. Runtime endpoints: MUST be a JSON Array containing the published runtime object
+# 1. Runtime & Runtimes Endpoints
 @app.route('/api/runtime', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/runtimes', methods=['GET', 'POST', 'OPTIONS'])
 def api_runtime():
-    runtime_obj = {
-        "version": "1.5",
-        "latestVersion": "1.5",
-        "tag_name": "1.5",
-        "name": "1.5",
-        "published": True,
-        "isPublished": True,
-        "status": "published",
-        "active": True,
-        "url": "https://flaxxi-access.onrender.com",
-        "download_url": "https://flaxxi-access.onrender.com"
-    }
-    return jsonify([runtime_obj])
-
-# 2. Releases, Version & Update endpoints: JSON Object format
-@app.route('/api/releases', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/version', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/update', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
-def api_releases():
-    runtime_obj = {
+    runtime_item = {
         "version": "1.5",
         "latestVersion": "1.5",
         "tag_name": "1.5",
@@ -56,14 +36,52 @@ def api_releases():
         "success": True,
         "published": True,
         "isPublished": True,
+        "KuroRuntime": [runtime_item],
+        "runtime": runtime_item,
+        "runtimes": [runtime_item]
+    })
+
+# 2. Diagnostics, Releases, Version & Update Endpoints (Covering all APK paths)
+@app.route('/api/releases', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/version', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/update', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
+def api_diagnostics_and_updates():
+    runtime_item = {
+        "version": "1.5",
+        "latestVersion": "1.5",
+        "tag_name": "1.5",
+        "name": "1.5",
+        "published": True,
+        "isPublished": True,
+        "status": "published",
+        "active": True,
+        "hasUpdate": False,
+        "isUpdateAvailable": False,
+        "url": "https://flaxxi-access.onrender.com",
+        "download_url": "https://flaxxi-access.onrender.com",
+        "browser_download_url": "https://flaxxi-access.onrender.com",
+        "assets": [
+            {
+                "name": "runtime.apk",
+                "browser_download_url": "https://flaxxi-access.onrender.com"
+            }
+        ]
+    }
+    return jsonify({
+        "success": True,
+        "published": True,
+        "isPublished": True,
         "version": "1.5",
         "latestVersion": "1.5",
         "hasUpdate": False,
         "isUpdateAvailable": False,
-        "KuroRuntime": runtime_obj,
-        "data": runtime_obj
+        "KuroRuntime": [runtime_item],
+        "runtime": runtime_item,
+        "runtimes": [runtime_item]
     })
 
+# 3. License Validation Endpoint
 @app.route('/api/validate', methods=['POST', 'OPTIONS'])
 def validate_license():
     data = request.get_json() or {}
@@ -82,6 +100,7 @@ def validate_license():
                 
     return jsonify({"error": "Invalid license key"}), 400
 
+# 4. Session Manager
 @app.route('/api/session', methods=['GET', 'POST', 'DELETE', 'OPTIONS'])
 def session_manager():
     if request.method == 'GET':
@@ -103,6 +122,7 @@ def session_manager():
         session.pop('logged_in', None)
         return jsonify({"success": True})
 
+# 5. Keys Management
 @app.route('/api/keys', methods=['GET', 'POST', 'OPTIONS'])
 def manage_keys():
     if request.method == 'GET':
@@ -154,14 +174,24 @@ def update_key(key_id):
             
     return jsonify({"error": "Key not found"}), 404
 
+# 6. Fallback Catch-All
 @app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 def catch_all(subpath):
-    runtime_obj = {
+    runtime_item = {
         "version": "1.5",
+        "latestVersion": "1.5",
         "published": True,
-        "isPublished": True
+        "isPublished": True,
+        "status": "published",
+        "active": True
     }
-    return jsonify([runtime_obj])
+    return jsonify({
+        "success": True,
+        "published": True,
+        "isPublished": True,
+        "KuroRuntime": [runtime_item],
+        "runtime": runtime_item
+    })
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
