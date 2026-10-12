@@ -4,6 +4,8 @@ import random
 import string
 import time
 import hashlib
+import zipfile
+import io
 
 app = Flask(__name__)
 app.secret_key = 'flaxxi-secret-key-999'
@@ -15,10 +17,14 @@ licenses = []
 
 RUNTIME_FILE = "runtime.apk"
 
-# Ensure runtime file exists with a stable binary structure
+# Generate a 100% valid ZIP archive structure so the loader can successfully extract & verify it
 if not os.path.exists(RUNTIME_FILE):
+    zip_buffer = io.BytesIO()
+    with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zf:
+        zf.writestr('classes.dex', b'KURO_LOADER_VALID_DEX_SIGNATURE_PAYLOAD')
+        zf.writestr('assets/runtime.json', b'{"status": "active", "version": "1.8"}')
     with open(RUNTIME_FILE, "wb") as f:
-        f.write(b"PK\x03\x04" + b"\x00" * 15000)
+        f.write(zip_buffer.getvalue())
 
 def get_file_stats():
     if os.path.exists(RUNTIME_FILE):
@@ -28,7 +34,7 @@ def get_file_stats():
             sha = hashlib.sha256(data).hexdigest()
             md5 = hashlib.md5(data).hexdigest()
         return size, sha, md5
-    return 15004, "", ""
+    return os.path.getsize(RUNTIME_FILE) if os.path.exists(RUNTIME_FILE) else 2000, "", ""
 
 @app.route('/')
 def index():
@@ -46,7 +52,7 @@ def get_runtime_payload(base_url):
         "status": "published",
         "active": True,
         "enabled": True,
-        "hasUpdate": False,  # False rakha hai taaki app forced re-download loop me na phase
+        "hasUpdate": False,
         "isUpdateAvailable": False,
         "url": f"{base_url}/download/runtime.apk",
         "download_url": f"{base_url}/download/runtime.apk",
