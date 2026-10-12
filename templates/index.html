@@ -1,220 +1,297 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">
-        <meta name="color-scheme" content="dark">
-        <meta name="theme-color" content="#17181a">
-        <meta name="description" content="Kuro panel — dashboard, keys, games, and sellers.">
-        <title>Sign in · Kuro</title>
-        <link rel="icon" type="image/svg+xml" href="logo.svg">
-        <script type="module" src="js/panel.js?v=270359cf1900"></script>
-        <link rel="stylesheet" href="css/base.css">
-        <link rel="stylesheet" href="css/layout.css">
-        <link rel="stylesheet" href="css/components.css">
-        <link rel="stylesheet" href="css/pages/dashboard.css">
-        <link rel="stylesheet" href="css/pages/accounts.css">
-        <link rel="stylesheet" href="css/pages/sellers.css">
-        <link rel="stylesheet" href="css/pages/keys.css?v=69d184e117b6">
-        <link rel="stylesheet" href="css/pages/games.css">
-        <link rel="stylesheet" href="css/pages/app.css">
-    </head>
-    <body>
-        <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <symbol id="i-dashboard" viewBox="0 0 24 24">
-                <path d="M4 13v7M12 4v16M20 9v11"/>
-            </symbol>
-            <symbol id="i-key" viewBox="0 0 24 24">
-                <circle cx="15.5" cy="8.5" r="5.5"/>
-                <path d="m11.5 12.5-8 8H3V17l3-3h3v-3M17 7h.01"/>
-            </symbol>
-            <symbol id="i-game" viewBox="0 0 24 24">
-                <path d="M8 7h8c3 0 4 3 5 9 .5 3-2 4-4 2l-2-2H9l-2 2c-2 2-4.5 1-4-2 1-6 2-9 5-9ZM6 11h4M8 9v4M15 11h.01M18 13h.01"/>
-            </symbol>
-            <symbol id="i-store" viewBox="0 0 24 24">
-                <path d="M4 11v9h16v-9M9 20v-6h6v6M3 7l2-4h14l2 4v2a3 3 0 0 1-4.5 2.6A3 3 0 0 1 12 11a3 3 0 0 1-4.5.6A3 3 0 0 1 3 9V7ZM3 7h18"/>
-            </symbol>
-            <symbol id="i-app" viewBox="0 0 24 24">
-                <rect x="6" y="2" width="12" height="20" rx="3"/>
-                <path d="M10 18h4M10 5h4"/>
-            </symbol>
-            <symbol id="i-calendar" viewBox="0 0 24 24">
-                <rect x="3" y="5" width="18" height="16" rx="3"/>
-                <path d="M7 3v4M17 3v4M3 11h18"/>
-            </symbol>
-            <symbol id="i-menu" viewBox="0 0 24 24">
-                <path d="M4 6h16M4 12h16M4 18h16"/>
-            </symbol>
-            <symbol id="i-close" viewBox="0 0 24 24">
-                <path d="m6 6 12 12M6 18 18 6"/>
-            </symbol>
-            <symbol id="i-trash" viewBox="0 0 24 24">
-                <path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 10v7M14 10v7"/>
-            </symbol>
-            <symbol id="i-plus" viewBox="0 0 24 24">
-                <path d="M5 12h14M12 5v14"/>
-            </symbol>
-            <symbol id="i-more" viewBox="0 0 24 24">
-                <path d="M5 12h.01M12 12h.01M19 12h.01" stroke-width="3"/>
-            </symbol>
-            <symbol id="i-deselect" viewBox="0 0 24 24">
-                <rect x="4" y="4" width="16" height="16" rx="3"/>
-                <path d="M8 12h8"/>
-            </symbol>
-            <symbol id="i-eye" viewBox="0 0 24 24">
-                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/>
-                <circle cx="12" cy="12" r="3"/>
-            </symbol>
-            <symbol id="i-eye-off" viewBox="0 0 24 24">
-                <path d="m3 3 18 18M10.6 5.1 12 5c6.5 0 10 7 10 7a20 20 0 0 1-3 3.7M6.5 6.5A22 22 0 0 0 2 12s3.5 7 10 7a11 11 0 0 0 5.5-1.5M9.9 9.9a3 3 0 0 0 4.2 4.2"/>
-            </symbol>
-            <symbol id="i-copy" viewBox="0 0 24 24">
-                <rect x="8" y="8" width="12" height="12" rx="2"/>
-                <path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/>
-            </symbol>
-            <symbol id="i-reset" viewBox="0 0 24 24">
-                <path d="M3 10a9 9 0 1 1 2.6 8.4M3 4v6h6"/>
-            </symbol>
-            <symbol id="i-ban" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="9"/>
-                <path d="m6 6 12 12"/>
-            </symbol>
-            <symbol id="i-check" viewBox="0 0 24 24">
-                <path d="m5 12 4 4L19 6"/>
-            </symbol>
-            <symbol id="i-search" viewBox="0 0 24 24">
-                <circle cx="10.5" cy="10.5" r="6.5"/>
-                <path d="m16 16 4 4"/>
-            </symbol>
-            <symbol id="i-logout" viewBox="0 0 24 24">
-                <path d="M10 4H5v16h5m-1-8h12m-4-4 4 4-4 4"/>
-            </symbol>
-        </svg>
-        <div class="view-status" id="view-status" role="status" tabindex="-1">
-            <p>Loading panel…</p>
-            <button class="primary-button" type="button" data-retry-view hidden>Try again</button>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>FLAXXI  ACCESS Kuro</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+      :root{color-scheme:dark;--bg:#050907;--card:#0b1510;--line:#21382b;--text:#ffffff;--muted:#91aa9b;--violet:#4df39b;--lime:#52f49d}
+      *{box-sizing:border-box}body{margin:0;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;background-image:radial-gradient(ellipse at 95% 0%,#12c85c22,transparent 45%)}
+      button,input,select{font:inherit}button{cursor:pointer;border:0}button:disabled{opacity:.55;cursor:wait}
+      button,input,select{border-radius:12px}input,select{width:100%;background:#070d09;color:var(--text);border:1px solid var(--line);padding:14px}
+      input:focus,select:focus{outline:2px solid var(--violet);outline-offset:2px}label{display:block;font-size:13px;color:var(--muted);margin-bottom:8px}
+      h1,h2,.brand{font-family:'Space Grotesk',sans-serif}h1{font-size:42px;letter-spacing:-1.8px;line-height:1.1;margin:12px 0 16px}
+      h2{font-size:21px;margin:0}p{color:var(--muted);line-height:1.6}.wrap{max-width:1200px;margin:auto;padding:0 32px}
+      .top{height:90px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
+      .brand{display:flex;gap:12px;align-items:center;font-size:23px;font-weight:600;letter-spacing:-.7px}
+      .mark{width:40px;height:40px;border-radius:13px;background:var(--lime);color:#042512;display:grid;place-items:center;font-size:25px;box-shadow:0 4px 24px #52f49d20}
+      .tag{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--violet)}
+      .chip{border:1px solid var(--line);padding:8px 14px;border-radius:30px;font-size:12px;color:var(--muted)}
+      .intro{display:flex;justify-content:space-between;align-items:end;margin:42px 0 28px}.intro p{margin:0}
+      .ghost{white-space:nowrap;flex-shrink:0;background:transparent;border:1px solid var(--line);color:var(--muted);padding:10px 16px}
+      .grid{display:grid;grid-template-columns:1fr 1.1fr;gap:24px}
+      .card{border:1px solid var(--line);border-radius:22px;padding:28px;background:linear-gradient(145deg,#11291a,#08120c);box-shadow:0 20px 50px #0002}
+      .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+      .step{color:var(--muted);font-family:'Space Grotesk',sans-serif;font-size:13px}.field{margin-top:22px}
+      .two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+      .primary{width:100%;padding:16px;background:var(--lime);color:#032714;font-weight:700;margin-top:28px;box-shadow:0 5px 20px #52f49d14}
+      .primary:hover{background:#a1ffcb}.key-card{position:relative;overflow:hidden;background:linear-gradient(145deg,#164e2c,#082214);border-color:#2c8450}
+      .key-card:before{content:'ϟ';position:absolute;right:14px;top:30px;font-size:290px;color:#b99ee511;transform:rotate(12deg);pointer-events:none}
+      .key-card>*{position:relative}.key-card .tag{color:#a8ffce}
+      .output{min-height:95px;margin:36px 0 20px;padding:20px;border:1px dashed #78efaa66;border-radius:16px;font-family:monospace;font-size:20px;line-height:1.7;overflow-wrap:anywhere;display:flex;align-items:center;color:#f1fff7}
+      .output.empty{font-family:'DM Sans';font-size:15px;color:#b7dec5}.key-card p{color:#b0d6bf;font-size:13px}
+      .copy{padding:12px 18px;border:1px solid #80e8a177;background:#34de8521;color:white}
+      .note{font-size:12px;line-height:1.6;color:var(--muted);margin-top:24px}
+      .history{margin-top:28px;margin-bottom:30px}.table-wrap{overflow:auto;margin-top:22px}
+      table{width:100%;border-collapse:collapse;text-align:left;white-space:nowrap;font-size:13px}
+      th{font-weight:500;color:var(--muted);padding:0 15px 14px 0}
+      td{padding:18px 15px 18px 0;border-top:1px solid var(--line)}td:first-child{color:var(--text)}
+      .status{border-radius:30px;padding:6px 10px;font-size:11px;background:#52f49d12;color:var(--lime)}
+      .status.off{background:#ff9aa414;color:#ff9aa4}
+      .action{font-size:12px;color:var(--violet);background:transparent;padding:6px 10px}.action:hover{background:#4df39b15}
+      .empty-row{text-align:center;color:var(--muted);padding:30px}
+      .foot{display:flex;justify-content:space-between;font-size:11px;color:#80958a;padding:18px 0 30px}
+      .login-shell{display:grid;place-items:center;min-height:calc(100vh - 130px)}
+      .login-card{max-width:430px;width:100%}.login-card h1{font-size:34px}
+      .error{color:#ffb5bf;font-size:13px;min-height:22px;margin-top:12px}.hidden{display:none!important}
+      #toast{position:fixed;right:25px;bottom:25px;max-width:calc(100vw - 50px);background:#133220;color:white;border:1px solid #399f63;border-radius:14px;padding:14px 20px;z-index:5}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="top">
+        <div class="brand">
+          <span class="mark" aria-hidden="true">ϟ</span>
+          Kuro Night Byte
         </div>
-        <noscript>
-            <p class="no-script">Enable JavaScript to sign in.</p>
-        </noscript>
-        <a class="skip-link" href="#main" data-panel hidden>Skip to content</a>
-        <button class="icon-button" id="sidebar-toggle" aria-controls="sidebar" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar" data-panel hidden>
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="m14 7-5 5 5 5"/>
-            </svg>
-        </button>
-        <aside class="sidebar" id="sidebar" aria-label="Main navigation" data-panel hidden>
-            <div class="sidebar-header">
-                <a class="brand" href="#dashboard" aria-label="Kuro dashboard">
-                    <img src="logo.svg" width="30" height="30" alt="">
-                    <span>Kuro</span>
-                </a>
-            </div>
-            <nav id="navigation" aria-label="Owner panel">
-                <a class="nav-item selected" href="#dashboard" data-route="dashboard" aria-current="page" aria-label="Dashboard" title="Dashboard">
-                    <svg class="icon" aria-hidden="true">
-                        <use href="#i-dashboard"/>
-                    </svg>
-                    <span class="nav-label">Dashboard</span>
-                </a>
-                <a class="nav-item" href="#keys" data-route="keys" aria-label="Keys" title="Keys">
-                    <svg class="icon" aria-hidden="true">
-                        <use href="#i-key"/>
-                    </svg>
-                    <span class="nav-label">Keys</span>
-                </a>
-                <a class="nav-item" href="#games" data-route="games" data-owner-only aria-label="Games" title="Games">
-                    <svg class="icon" aria-hidden="true">
-                        <use href="#i-game"/>
-                    </svg>
-                    <span class="nav-label">Games</span>
-                </a>
-                <a class="nav-item" href="#sellers" data-route="sellers" data-owner-only aria-label="Sellers" title="Sellers">
-                    <svg class="icon" aria-hidden="true">
-                        <use href="#i-store"/>
-                    </svg>
-                    <span class="nav-label">Sellers</span>
-                </a>
-                <a class="nav-item" href="#app" data-route="app" data-owner-only aria-label="App" title="App">
-                    <svg class="icon" aria-hidden="true">
-                        <use href="#i-app"/>
-                    </svg>
-                    <span class="nav-label">App</span>
-                </a>
-            </nav>
-            <div class="account-controls">
-                <button class="account" type="button" data-profile aria-label="Open profile" aria-haspopup="dialog">
-                    <span class="avatar" aria-hidden="true">O</span>
-                    <span class="account-label">
-                        <span data-account-name>Owner</span>
-                        <small>Profile</small>
-                    </span>
-                    <svg class="icon account-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
-                </button>
-                <button class="icon-button" type="button" data-sign-out aria-label="Log out">
-                    <svg class="icon" aria-hidden="true">
-                        <use href="#i-logout"/>
-                    </svg>
-                </button>
-            </div>
-        </aside>
-        <main id="main" tabindex="-1" data-panel hidden>
-            <header class="page-header">
-                <h1>Dashboard</h1>
-                <div class="header-actions">
-                    <div class="wallet-summary" data-wallet aria-label="Wallet balance" hidden>
-                        <span>Wallet</span>
-                        <strong></strong>
-                    </div>
-                    <button class="icon-button" id="menu-button" aria-label="Open navigation" aria-haspopup="dialog">
-                        <svg class="icon" aria-hidden="true">
-                            <use href="#i-menu"/>
-                        </svg>
-                    </button>
-                </div>
-            </header>
-        </main>
-        <dialog id="mobile-navigation" aria-labelledby="menu-heading">
-            <div class="dialog-heading">
-                <h2 class="brand" id="menu-heading">
-                    <img src="logo.svg" width="28" height="28" alt="">
-                    <span>Kuro</span>
-                </h2>
-                <button class="icon-button" type="button" data-close aria-label="Close navigation">
-                    <svg class="icon">
-                        <use href="#i-close"/>
-                    </svg>
-                </button>
-            </div>
-            <div id="mobile-nav-content"></div>
-            <div class="mobile-account">
-                <button class="mobile-profile" type="button" data-profile aria-label="Open profile" aria-haspopup="dialog">
-                    <span class="avatar" aria-hidden="true"></span>
-                    <span class="account-label">
-                        <span data-account-name></span>
-                        <small>Profile</small>
-                    </span>
-                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
-                </button>
-                <button class="icon-button" type="button" data-sign-out aria-label="Log out">
-                    <svg class="icon" aria-hidden="true">
-                        <use href="#i-logout"/>
-                    </svg>
-                </button>
-            </div>
-        </dialog>
-        <div id="notification" popover="manual">
-            <svg class="icon notification-success" viewBox="0 0 24 24" aria-hidden="true">
-                <circle cx="12" cy="12" r="9"/>
-                <path d="m8 12 3 3 5-6"/>
-            </svg>
-            <svg class="icon notification-error" viewBox="0 0 24 24" aria-hidden="true">
-                <circle cx="12" cy="12" r="9"/>
-                <path d="M12 7v6m0 3h.01"/>
-            </svg>
-            <span role="status" aria-atomic="true"></span>
+        <span class="chip">KURO / RUNTIME 1.6</span>
+      </header>
+      <main id="loginView" class="login-shell">
+        <form class="card login-card" id="loginForm">
+          <span class="tag">OWNER ACCESS</span>
+          <h1>Your keys.<br />Your control.</h1>
+          <p>Sign in to manage Kuro licenses.</p>
+          <div class="field">
+            <label for="username">Username</label>
+            <input id="username" autocomplete="username" required />
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <input id="password" type="password" autocomplete="current-password" required />
+          </div>
+          <button class="primary" id="signIn">Sign in <span aria-hidden="true">↗</span></button>
+          <div class="error" id="loginError" role="alert"></div>
+        </form>
+      </main>
+      <main id="panelView" class="hidden">
+        <div class="intro">
+          <div>
+            <span class="tag">LICENSE WORKSPACE</span>
+            <h1>Make the next key.</h1>
+            <p>Set access. Generate. Keep control.</p>
+            <p style="font-size:12px;color:#a8ffce">Kuro connected · Runtime download and key activation verified.</p>
+          </div>
+          <button class="ghost" id="logout">Sign out</button>
         </div>
-    <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920" integrity="sha512-L0ha0OXavK/8okipN9F8BtP84dg9DUhPERbBXzwI6dgTA55d2+yweo3pn5CSFYs45/r8md2+xvUPtTdvTNRfjA==" data-cf-beacon='{"version":"2024.11.0","token":"07ffd97ab1e047f195dbcd595e2d1065","r":1,"spa":2}' crossorigin="anonymous"></script>
-</body>
+        <div class="grid">
+          <form id="keyForm" class="card">
+            <div class="head">
+              <h2>Generate license</h2>
+              <span class="step">01 / CREATE</span>
+            </div>
+            <div class="field">
+              <label for="mode">Key type</label>
+              <select id="mode">
+                <option value="random">Generate random key</option>
+                <option value="custom">Use my custom key</option>
+              </select>
+            </div>
+            <div class="field hidden" id="customField">
+              <label for="customKey">Your custom key</label>
+              <input id="customKey" maxlength="80" placeholder="Enter any key you choose" />
+              <p style="font-size:12px">Use uppercase letters, numbers and hyphens for APK compatibility.</p>
+            </div>
+            <div class="field">
+              <label for="label">Customer label <span>(optional)</span></label>
+              <input id="label" maxlength="60" placeholder="e.g. Hassan · monthly" />
+            </div>
+            <div class="two">
+              <div class="field">
+                <label for="days">Valid for</label>
+                <select id="days">
+                  <option value="1">1 day</option>
+                  <option value="2">2 days</option>
+                  <option value="3">3 days</option>
+                  <option value="7">7 days</option>
+                  <option value="30" selected>30 days</option>
+                  <option value="90">90 days</option>
+                  <option value="365">1 year</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="devices">Device limit</label>
+                <input id="devices" type="number" min="1" max="50000" value="1" required />
+              </div>
+            </div>
+            <button class="primary" id="generate">Generate key <span aria-hidden="true">↗</span></button>
+            <div class="note">Validity starts when the key is created. Save the generated key now; full keys are shown once.</div>
+          </form>
+          <section class="card key-card">
+            <div class="head">
+              <h2>Your new key</h2>
+              <span class="tag">02 / SHARE</span>
+            </div>
+            <div id="output" class="output empty" aria-live="polite">Your generated key will appear here.</div>
+            <button class="copy" id="copy" disabled>Copy key <span aria-hidden="true">⧉</span></button>
+            <p id="outputMeta">Choose a duration and device limit to begin.</p>
+          </section>
+        </div>
+        <section class="card history">
+          <div class="head">
+            <h2>License history</h2>
+            <button class="ghost" id="refresh">Refresh</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Customer / ID</th>
+                  <th>Status</th>
+                  <th>Expires</th>
+                  <th>Devices</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+          <div class="error" id="panelError" role="alert"></div>
+        </section>
+      </main>
+      <footer class="foot">
+        <span>Kuro Night Byte · Kuro licensing</span>
+        <span>Private owner workspace</span>
+      </footer>
+    </div>
+    <div id="toast" class="hidden" role="status"></div>
+    <script>
+      let csrf='', generatedKey='';
+      const $=id=>document.getElementById(id);
+      async function api(path, method='GET', body) {
+        const r = await fetch(path, {
+          method,
+          headers: {'Content-Type': 'application/json', 'X-CSRF-Token': csrf},
+          body: body === undefined ? undefined : JSON.stringify(body)
+        });
+        let d;
+        try { d = await r.json(); } catch { throw Error('Server unavailable. Try again.'); }
+        if (!r.ok) throw Error(d.error || 'Request failed.');
+        return d;
+      }
+      function toast(message) {
+        $('toast').textContent = message;
+        $('toast').classList.remove('hidden');
+        clearTimeout(window.toastTimer);
+        window.toastTimer = setTimeout(() => $('toast').classList.add('hidden'), 3000);
+      }
+      function view(owner) {
+        $('loginView').classList.toggle('hidden', owner);$('panelView').classList.toggle('hidden', !owner);
+      }
+      function date(value) {
+        return new Date(value * 1000).toLocaleDateString(undefined, {year: 'numeric', month: 'short', day: 'numeric'});
+      }
+      async function refresh() {
+        const data = await api('/api/keys');
+        $('rows').replaceChildren();
+        if (!data.keys.length) {
+          const tr = document.createElement('tr'), td = document.createElement('td');
+          td.colSpan = 5; td.className = 'empty-row';
+          td.textContent = 'No licenses yet. Generate your first key above.';
+          tr.append(td); $('rows').append(tr);
+        }
+        for (const k of data.keys) {
+          const tr = document.createElement('tr');
+          const expired = k.expires <= Date.now() / 1000;
+          for (const value of [k.label || k.id, k.revoked ? 'Revoked' : expired ? 'Expired' : 'Active', date(k.expires), `${k.devices} / ${k.device_limit}`]) {
+            const td = document.createElement('td');
+            td.textContent = value;
+            if (tr.children.length === 1) {
+              const span = document.createElement('span');
+              span.className = 'status' + (k.revoked || expired ? ' off' : '');
+              span.textContent = value;
+              td.replaceChildren(span);
+            }
+            tr.append(td);
+          }
+          const td = document.createElement('td');
+          for (const [action, label] of [[k.revoked ? 'enable' : 'revoke', k.revoked ? 'Enable' : 'Revoke'], ['reset_devices', 'Reset devices']]) {
+            const btn = document.createElement('button');
+            btn.className = 'action'; btn.textContent = label;
+            btn.onclick = async () => {
+              btn.disabled = true;
+              try {
+                await api('/api/keys/' + k.id, 'POST', {action});
+                await refresh();
+                toast(action === 'reset_devices' ? 'Device bindings reset.' : 'License updated.');
+              } catch (e) { $('panelError').textContent = e.message; }
+              finally { btn.disabled = false; }
+            };
+            td.append(btn);
+          }
+          tr.append(td); $('rows').append(tr);
+        }
+      }
+      $('mode').onchange = () => {
+        $('customField').classList.toggle('hidden',$('mode').value !== 'custom');
+        $('customKey').required =$('mode').value === 'custom';
+      };
+      $('loginForm').onsubmit = async e => {
+        e.preventDefault();
+        $('signIn').disabled = true;
+        $('loginError').textContent = '';
+        try {
+          const d = await api('/api/session', 'POST', {username: $('username').value, password:$('password').value});
+          csrf = d.csrf;
+          $('password').value = '';
+          view(true);
+          await refresh();
+        } catch (e) {
+          $('loginError').textContent = e.message;
+        } finally {
+          $('signIn').disabled = false;
+        }
+      };
+      $('keyForm').onsubmit = async e => {
+        e.preventDefault();
+        $('generate').disabled = true;
+        $('panelError').textContent = '';
+        try {
+          const d = await api('/api/keys', 'POST', {
+            mode: $('mode').value,
+            custom_key: $('customKey').value,
+            label: $('label').value,
+            days: Number($('days').value),
+            device_limit: Number($('devices').value)
+          });
+          generatedKey = d.key;
+          $('output').textContent = d.key;
+          $('output').classList.remove('empty');$('copy').disabled = false;
+          $('outputMeta').textContent = 'Expires ' + date(d.expires) + ' · ' + $('devices').value + ' device' + (Number($('devices').value) > 1 ? 's' : '');
+          await refresh();
+          toast('License created.');
+        } catch (e) {
+          $('panelError').textContent = e.message;
+        } finally {
+          $('generate').disabled = false;
+        }
+      };
+      $('copy').onclick = async () => {         try {           await navigator.clipboard.writeText(generatedKey);           toast('Key copied.');         } catch {           toast('Select the key and copy it manually.');         }       };$('refresh').onclick = () => refresh().catch(e => $('panelError').textContent = e.message);$('logout').onclick = async () => {
+        try {
+          await api('/api/session', 'DELETE');
+          csrf = '';
+          generatedKey = '';
+          $('output').textContent = 'Your generated key will appear here.';
+          $('output').classList.add('empty');$('copy').disabled = true;
+          view(false);
+        } catch (e) { toast(e.message); }
+      };
+      api('/api/session').then(async d => {
+        csrf = d.csrf;
+        view(d.owner);
+        if (d.owner) await refresh();
+      }).catch(e => $('loginError').textContent = e.message);
+    </script>
+  </body>
 </html>
