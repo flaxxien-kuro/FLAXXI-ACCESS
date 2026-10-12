@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, jsonify
+from flask import Flask, render_template, request, session, jsonify, send_file
 import os
 import random
 import string
@@ -16,13 +16,13 @@ licenses = []
 def index():
     return render_template('index.html')
 
-# Comprehensive payload covering all runtime and release flags
+# Comprehensive payload covering all runtime, verification, and release flags for Kuro v1.8 / v1.5
 def get_runtime_payload():
     return {
-        "version": "1.5",
-        "latestVersion": "1.5",
-        "tag_name": "1.5",
-        "name": "1.5",
+        "version": "1.8",
+        "latestVersion": "1.8",
+        "tag_name": "1.8",
+        "name": "Kuro Runtime 1.8",
         "published": True,
         "isPublished": True,
         "status": "published",
@@ -30,14 +30,14 @@ def get_runtime_payload():
         "enabled": True,
         "hasUpdate": False,
         "isUpdateAvailable": False,
-        "url": "https://flaxxi-access.onrender.com",
-        "download_url": "https://flaxxi-access.onrender.com",
-        "browser_download_url": "https://flaxxi-access.onrender.com",
+        "url": "https://flaxxi-access.onrender.com/download/runtime.apk",
+        "download_url": "https://flaxxi-access.onrender.com/download/runtime.apk",
+        "browser_download_url": "https://flaxxi-access.onrender.com/download/runtime.apk",
         "assets": [
             {
                 "name": "runtime.apk",
-                "size": 1024,
-                "browser_download_url": "https://flaxxi-access.onrender.com"
+                "size": 10485760, # ~10MB example size
+                "browser_download_url": "https://flaxxi-access.onrender.com/download/runtime.apk"
             }
         ]
     }
@@ -59,8 +59,8 @@ def api_releases_endpoint():
         "published": True,
         "isPublished": True,
         "status": "published",
-        "version": "1.5",
-        "latestVersion": "1.5",
+        "version": "1.8",
+        "latestVersion": "1.8",
         "hasUpdate": False,
         "isUpdateAvailable": False,
         "KuroRuntime": [item],
@@ -68,6 +68,18 @@ def api_releases_endpoint():
         "runtimes": [item],
         "data": item
     })
+
+# Direct Downloading endpoint for APK / Runtime resources
+@app.route('/download/runtime.apk', methods=['GET', 'OPTIONS'])
+def download_runtime():
+    apk_path = 'runtime.apk'
+    if os.path.exists(apk_path):
+        return send_file(apk_path, as_attachment=True)
+    # Fallback response if physical file isn't uploaded on server yet
+    return jsonify({
+        "success": True, 
+        "message": "Runtime package is ready. Please place runtime.apk in server directory if direct file download is required."
+    }), 200
 
 @app.route('/api/validate', methods=['POST', 'OPTIONS'])
 def validate_license():
