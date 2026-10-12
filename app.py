@@ -15,7 +15,7 @@ licenses = []
 
 RUNTIME_FILE = "runtime.apk"
 
-# Ensure runtime file exists with a stable, valid size
+# Ensure runtime file exists with a stable binary structure
 if not os.path.exists(RUNTIME_FILE):
     with open(RUNTIME_FILE, "wb") as f:
         f.write(b"PK\x03\x04" + b"\x00" * 15000)
@@ -46,8 +46,8 @@ def get_runtime_payload(base_url):
         "status": "published",
         "active": True,
         "enabled": True,
-        "hasUpdate": True,
-        "isUpdateAvailable": True,
+        "hasUpdate": False,  # False rakha hai taaki app forced re-download loop me na phase
+        "isUpdateAvailable": False,
         "url": f"{base_url}/download/runtime.apk",
         "download_url": f"{base_url}/download/runtime.apk",
         "browser_download_url": f"{base_url}/download/runtime.apk",
@@ -85,8 +85,8 @@ def api_diagnostics():
         "status": "published",
         "version": "1.8",
         "latestVersion": "1.8",
-        "hasUpdate": True,
-        "isUpdateAvailable": True,
+        "hasUpdate": False,
+        "isUpdateAvailable": False,
         "url": item["url"],
         "download_url": item["download_url"],
         "size": item["size"],
@@ -103,7 +103,6 @@ def api_diagnostics():
 def api_releases_endpoint():
     return api_diagnostics()
 
-# Custom Chunked Binary Stream for Downloading to prevent incomplete downloads
 @app.route('/download/runtime.apk', methods=['GET', 'HEAD', 'OPTIONS'])
 def download_runtime():
     if not os.path.exists(RUNTIME_FILE):
