@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, jsonify, send_file, Response
+from flask import Flask, render_template, request, session, jsonify, Response
 import os
 import random
 import string
@@ -15,9 +15,10 @@ licenses = []
 
 RUNTIME_FILE = "runtime.apk"
 
+# Ensure runtime file exists with a stable, valid size
 if not os.path.exists(RUNTIME_FILE):
     with open(RUNTIME_FILE, "wb") as f:
-        f.write(b"PK\x03\x04\x14\x00\x08\x00\x08\x00" + b"\x00" * 10000)
+        f.write(b"PK\x03\x04" + b"\x00" * 15000)
 
 def get_file_stats():
     if os.path.exists(RUNTIME_FILE):
@@ -27,7 +28,7 @@ def get_file_stats():
             sha = hashlib.sha256(data).hexdigest()
             md5 = hashlib.md5(data).hexdigest()
         return size, sha, md5
-    return 10008, "", ""
+    return 15004, "", ""
 
 @app.route('/')
 def index():
@@ -45,7 +46,7 @@ def get_runtime_payload(base_url):
         "status": "published",
         "active": True,
         "enabled": True,
-        "hasUpdate": True,  # Force update so app clears cache
+        "hasUpdate": True,
         "isUpdateAvailable": True,
         "url": f"{base_url}/download/runtime.apk",
         "download_url": f"{base_url}/download/runtime.apk",
@@ -102,10 +103,11 @@ def api_diagnostics():
 def api_releases_endpoint():
     return api_diagnostics()
 
+# Custom Chunked Binary Stream for Downloading to prevent incomplete downloads
 @app.route('/download/runtime.apk', methods=['GET', 'HEAD', 'OPTIONS'])
 def download_runtime():
     if not os.path.exists(RUNTIME_FILE):
-        return jsonify({"error": "Runtime file missing on server"}), 404
+        return jsonify({"error": "File not found"}), 404
         
     size, _, _ = get_file_stats()
     
@@ -113,14 +115,25 @@ def download_runtime():
         resp = Response()
         resp.headers['Content-Length'] = str(size)
         resp.headers['Content-Type'] = 'application/vnd.android.package-archive'
+        resp.headers['Accept-Ranges'] = 'bytes'
         return resp
-        
-    return send_file(
-        RUNTIME_FILE, 
-        as_attachment=True, 
-        download_name="runtime.apk", 
-        mimetype="application/vnd.android.package-archive",
-        conditional=True
+
+    def generate():
+        with open(RUNTIME_FILE, "rb") as f:
+            while True:
+                chunk = f.read(4096)
+                if not chunk:
+                    break
+                yield chunk
+
+    return Response(
+        generate(),
+        mimetype='application/vnd.android.package-archive',
+        headers={
+            'Content-Length': str(size),
+            'Accept-Ranges': 'bytes',
+            'Content-Disposition': 'attachment; filename=runtime.apk'
+        }
     )
 
 @app.route('/api/validate', methods=['POST', 'OPTIONS'])
