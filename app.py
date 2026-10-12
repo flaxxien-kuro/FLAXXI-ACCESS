@@ -1,9 +1,8 @@
-from flask import Flask, render_template, request, session, jsonify, send_file
+from flask import Flask, render_template, request, session, jsonify, send_file, Response
 import os
 import random
 import string
 import time
-import io
 import hashlib
 
 app = Flask(__name__)
@@ -14,33 +13,29 @@ ADMIN_PASS = "FLAXXI@123"
 
 licenses = []
 
-# Generate a valid binary runtime file and calculate its cryptographic hashes
 RUNTIME_FILE = "runtime.apk"
+
+# Valid minimal binary structure ensure karne ke liye taaki loader reject na kare
 if not os.path.exists(RUNTIME_FILE):
     with open(RUNTIME_FILE, "wb") as f:
-        f.write(b"PK\x03\x04" + b"\x00" * 5000)
+        f.write(b"PK\x03\x04\x14\x00\x08\x00\x08\x00" + b"\x00" * 10000)
 
-def get_file_hashes():
+def get_file_stats():
     if os.path.exists(RUNTIME_FILE):
+        size = os.path.getsize(RUNTIME_FILE)
         with open(RUNTIME_FILE, "rb") as f:
             data = f.read()
-            return {
-                "size": len(data),
-                "sha256": hashlib.sha256(data).hexdigest(),
-                "md5": hashlib.md5(data).hexdigest()
-            }
-    return {"size": 5004, "sha256": "", "md5": ""}
+            sha = hashlib.sha256(data).hexdigest()
+            md5 = hashlib.md5(data).hexdigest()
+        return size, sha, md5
+    return 10008, "", ""
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-def get_runtime_payload(base_url="https://flaxxi-access.onrender.com"):
-    file_info = get_file_hashes()
-    file_size = file_info["size"]
-    file_sha256 = file_info["sha256"]
-    file_md5 = file_info["md5"]
-    
+def get_runtime_payload(base_url):
+    size, sha, md5 = get_file_stats()
     return {
         "version": "1.8",
         "latestVersion": "1.8",
@@ -51,25 +46,23 @@ def get_runtime_payload(base_url="https://flaxxi-access.onrender.com"):
         "status": "published",
         "active": True,
         "enabled": True,
-        # Force the app to clear saved cache and download fresh file
-        "hasUpdate": True,
-        "isUpdateAvailable": True,
-        "forceUpdate": True,
+        "hasUpdate": False,
+        "isUpdateAvailable": False,
         "url": f"{base_url}/download/runtime.apk",
         "download_url": f"{base_url}/download/runtime.apk",
         "browser_download_url": f"{base_url}/download/runtime.apk",
-        "size": file_size,
-        "file_size": file_size,
-        "content_length": file_size,
-        "sha256": file_sha256,
-        "hash": file_sha256,
-        "checksum": file_sha256,
-        "md5": file_md5,
+        "size": size,
+        "file_size": size,
+        "content_length": size,
+        "sha256": sha,
+        "hash": sha,
+        "checksum": sha,
+        "md5": md5,
         "assets": [
             {
                 "name": "runtime.apk",
-                "size": file_size,
-                "sha256": file_sha256,
+                "size": size,
+                "sha256": sha,
                 "browser_download_url": f"{base_url}/download/runtime.apk"
             }
         ]
@@ -79,14 +72,10 @@ def get_runtime_payload(base_url="https://flaxxi-access.onrender.com"):
 @app.route('/api/runtimes', methods=['GET', 'POST', 'OPTIONS'])
 def api_runtime():
     base_url = request.host_url.rstrip('/')
-    item = get_runtime_payload(base_url)
-    return jsonify([item])
+    return jsonify([get_runtime_payload(base_url)])
 
-@app.route('/api/releases', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/version', methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/api/update', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
-def api_releases_endpoint():
+def api_diagnostics():
     base_url = request.host_url.rstrip('/')
     item = get_runtime_payload(base_url)
     return jsonify({
@@ -96,28 +85,43 @@ def api_releases_endpoint():
         "status": "published",
         "version": "1.8",
         "latestVersion": "1.8",
-        "hasUpdate": True,
-        "isUpdateAvailable": True,
+        "hasUpdate": False,
+        "isUpdateAvailable": False,
+        "url": item["url"],
+        "download_url": item["download_url"],
+        "size": item["size"],
+        "sha256": item["sha256"],
         "KuroRuntime": [item],
         "runtime": item,
         "runtimes": [item],
         "data": item
     })
 
-@app.route('/download/runtime.apk', methods=['GET', 'OPTIONS'])
+@app.route('/api/releases', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/version', methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/api/update', methods=['GET', 'POST', 'OPTIONS'])
+def api_releases_endpoint():
+    return api_diagnostics()
+
+@app.route('/download/runtime.apk', methods=['GET', 'HEAD', 'OPTIONS'])
 def download_runtime():
-    if os.path.exists(RUNTIME_FILE):
-        return send_file(
-            RUNTIME_FILE, 
-            as_attachment=True, 
-            download_name="runtime.apk", 
-            mimetype="application/vnd.android.package-archive"
-        )
+    if not os.path.exists(RUNTIME_FILE):
+        return jsonify({"error": "Runtime file missing on server"}), 404
+        
+    size, _, _ = get_file_stats()
+    
+    if request.method == 'HEAD':
+        resp = Response()
+        resp.headers['Content-Length'] = str(size)
+        resp.headers['Content-Type'] = 'application/vnd.android.package-archive'
+        return resp
+        
     return send_file(
-        io.BytesIO(b"PK\x03\x04" + b"\x00" * 5000),
-        as_attachment=True,
-        download_name="runtime.apk",
-        mimetype="application/vnd.android.package-archive"
+        RUNTIME_FILE, 
+        as_attachment=True, 
+        download_name="runtime.apk", 
+        mimetype="application/vnd.android.package-archive",
+        conditional=True
     )
 
 @app.route('/api/validate', methods=['POST', 'OPTIONS'])
@@ -212,17 +216,7 @@ def update_key(key_id):
 
 @app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 def catch_all(subpath):
-    base_url = request.host_url.rstrip('/')
-    item = get_runtime_payload(base_url)
-    return jsonify({
-        "success": True,
-        "published": True,
-        "isPublished": True,
-        "hasUpdate": True,
-        "isUpdateAvailable": True,
-        "KuroRuntime": [item],
-        "runtime": item
-    })
+    return api_diagnostics()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
