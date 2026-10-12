@@ -15,7 +15,6 @@ licenses = []
 
 RUNTIME_FILE = "runtime.apk"
 
-# Valid minimal binary structure ensure karne ke liye taaki loader reject na kare
 if not os.path.exists(RUNTIME_FILE):
     with open(RUNTIME_FILE, "wb") as f:
         f.write(b"PK\x03\x04\x14\x00\x08\x00\x08\x00" + b"\x00" * 10000)
@@ -46,8 +45,8 @@ def get_runtime_payload(base_url):
         "status": "published",
         "active": True,
         "enabled": True,
-        "hasUpdate": False,
-        "isUpdateAvailable": False,
+        "hasUpdate": True,  # Force update so app clears cache
+        "isUpdateAvailable": True,
         "url": f"{base_url}/download/runtime.apk",
         "download_url": f"{base_url}/download/runtime.apk",
         "browser_download_url": f"{base_url}/download/runtime.apk",
@@ -85,8 +84,8 @@ def api_diagnostics():
         "status": "published",
         "version": "1.8",
         "latestVersion": "1.8",
-        "hasUpdate": False,
-        "isUpdateAvailable": False,
+        "hasUpdate": True,
+        "isUpdateAvailable": True,
         "url": item["url"],
         "download_url": item["download_url"],
         "size": item["size"],
