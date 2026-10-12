@@ -3,6 +3,7 @@ import os
 import random
 import string
 import time
+import io
 
 app = Flask(__name__)
 app.secret_key = 'flaxxi-secret-key-999'
@@ -12,19 +13,19 @@ ADMIN_PASS = "FLAXXI@123"
 
 licenses = []
 
-# Ensure a dummy runtime file exists so the app can download and verify it successfully
+# Generate a proper zip-like or valid binary header structure so loaders accept it
 RUNTIME_FILE = "runtime.apk"
 if not os.path.exists(RUNTIME_FILE):
     with open(RUNTIME_FILE, "wb") as f:
-        # Write some dummy bytes so file size > 0 and verification passes
-        f.write(b"KURO_RUNTIME_BINARY_CONTENT_" * 500)
+        # Standard ZIP magic header bytes (PK\x03\x04) often expected by Android loaders/APKs
+        f.write(b"PK\x03\x04" + b"\x00" * 5000)
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-def get_runtime_payload():
-    file_size = os.path.getsize(RUNTIME_FILE) if os.path.exists(RUNTIME_FILE) else 15000
+def get_runtime_payload(base_url="https://flaxxi-access.onrender.com"):
+    file_size = os.path.getsize(RUNTIME_FILE) if os.path.exists(RUNTIME_FILE) else 5004
     return {
         "version": "1.8",
         "latestVersion": "1.8",
@@ -37,16 +38,17 @@ def get_runtime_payload():
         "enabled": True,
         "hasUpdate": False,
         "isUpdateAvailable": False,
-        "url": "https://flaxxi-access.onrender.com/download/runtime.apk",
-        "download_url": "https://flaxxi-access.onrender.com/download/runtime.apk",
-        "browser_download_url": "https://flaxxi-access.onrender.com/download/runtime.apk",
+        "url": f"{base_url}/download/runtime.apk",
+        "download_url": f"{base_url}/download/runtime.apk",
+        "browser_download_url": f"{base_url}/download/runtime.apk",
         "size": file_size,
         "file_size": file_size,
+        "content_length": file_size,
         "assets": [
             {
                 "name": "runtime.apk",
                 "size": file_size,
-                "browser_download_url": "https://flaxxi-access.onrender.com/download/runtime.apk"
+                "browser_download_url": f"{base_url}/download/runtime.apk"
             }
         ]
     }
@@ -54,7 +56,8 @@ def get_runtime_payload():
 @app.route('/api/runtime', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/runtimes', methods=['GET', 'POST', 'OPTIONS'])
 def api_runtime():
-    item = get_runtime_payload()
+    base_url = request.host_url.rstrip('/')
+    item = get_runtime_payload(base_url)
     return jsonify([item])
 
 @app.route('/api/releases', methods=['GET', 'POST', 'OPTIONS'])
@@ -62,7 +65,8 @@ def api_runtime():
 @app.route('/api/update', methods=['GET', 'POST', 'OPTIONS'])
 @app.route('/api/diagnostics', methods=['GET', 'POST', 'OPTIONS'])
 def api_releases_endpoint():
-    item = get_runtime_payload()
+    base_url = request.host_url.rstrip('/')
+    item = get_runtime_payload(base_url)
     return jsonify({
         "success": True,
         "published": True,
@@ -78,12 +82,22 @@ def api_releases_endpoint():
         "data": item
     })
 
-# Real file download endpoint with proper binary streaming
 @app.route('/download/runtime.apk', methods=['GET', 'OPTIONS'])
 def download_runtime():
     if os.path.exists(RUNTIME_FILE):
-        return send_file(RUNTIME_FILE, as_attachment=True, download_name="runtime.apk", mimetype="application/vnd.android.package-archive")
-    return jsonify({"error": "File not found"}), 404
+        return send_file(
+            RUNTIME_FILE, 
+            as_attachment=True, 
+            download_name="runtime.apk", 
+            mimetype="application/vnd.android.package-archive"
+        )
+    # Fallback in-memory stream if file is missing
+    return send_file(
+        io.BytesIO(b"PK\x03\x04" + b"\x00" * 5000),
+        as_attachment=True,
+        download_name="runtime.apk",
+        mimetype="application/vnd.android.package-archive"
+    )
 
 @app.route('/api/validate', methods=['POST', 'OPTIONS'])
 def validate_license():
@@ -177,7 +191,8 @@ def update_key(key_id):
 
 @app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 def catch_all(subpath):
-    item = get_runtime_payload()
+    base_url = request.host_url.rstrip('/')
+    item = get_runtime_payload(base_url)
     return jsonify({
         "success": True,
         "published": True,
@@ -186,5 +201,5 @@ def catch_all(subpath):
         "runtime": item
     })
 
-if __name__ == '__main__':
+if __name__ == 'main__':
     app.run(host='0.0.0.0', port=10000)
