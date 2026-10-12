@@ -51,8 +51,10 @@ def get_runtime_payload(base_url="https://flaxxi-access.onrender.com"):
         "status": "published",
         "active": True,
         "enabled": True,
-        "hasUpdate": False,
-        "isUpdateAvailable": False,
+        # Force the app to clear saved cache and download fresh file
+        "hasUpdate": True,
+        "isUpdateAvailable": True,
+        "forceUpdate": True,
         "url": f"{base_url}/download/runtime.apk",
         "download_url": f"{base_url}/download/runtime.apk",
         "browser_download_url": f"{base_url}/download/runtime.apk",
@@ -94,8 +96,8 @@ def api_releases_endpoint():
         "status": "published",
         "version": "1.8",
         "latestVersion": "1.8",
-        "hasUpdate": False,
-        "isUpdateAvailable": False,
+        "hasUpdate": True,
+        "isUpdateAvailable": True,
         "KuroRuntime": [item],
         "runtime": item,
         "runtimes": [item],
@@ -162,10 +164,7 @@ def manage_keys():
     if request.method == 'GET':
         return jsonify({"keys": licenses})
         
-    elif request.POST: # handled via request.method
-        pass
-        
-    if request.method == 'POST':
+    elif request.method == 'POST':
         data = request.get_json() or {}
         mode = data.get('mode')
         custom_key = data.get('custom_key')
@@ -195,10 +194,6 @@ def manage_keys():
         return jsonify(new_license)
 
 @app.route('/api/keys/<string:key_id>', methods=['POST', 'OPTIONS'])
-def update_file_key(key_id):
-    # alias to avoid naming conflicts
-    return update_key(key_id)
-
 def update_key(key_id):
     data = request.get_json() or {}
     action = data.get('action')
@@ -223,6 +218,8 @@ def catch_all(subpath):
         "success": True,
         "published": True,
         "isPublished": True,
+        "hasUpdate": True,
+        "isUpdateAvailable": True,
         "KuroRuntime": [item],
         "runtime": item
     })
