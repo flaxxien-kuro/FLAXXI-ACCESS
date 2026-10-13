@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>FLAXXI  ACCESS Kuro</title>
+    <title>FLAXXI ACCESS Kuro</title>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
       :root{color-scheme:dark;--bg:#050907;--card:#0b1510;--line:#21382b;--text:#ffffff;--muted:#91aa9b;--violet:#4df39b;--lime:#52f49d}
@@ -54,9 +53,9 @@
       <header class="top">
         <div class="brand">
           <span class="mark" aria-hidden="true">ϟ</span>
-          Kuro Night Byte
+          Flaxxi Access
         </div>
-        <span class="chip">KURO / RUNTIME 1.6</span>
+        <span class="chip">KURO / RUNTIME 1.8</span>
       </header>
       <main id="loginView" class="login-shell">
         <form class="card login-card" id="loginForm">
@@ -161,7 +160,7 @@
         </section>
       </main>
       <footer class="foot">
-        <span>Kuro Night Byte · Kuro licensing</span>
+        <span>Flaxxi Access · Kuro licensing</span>
         <span>Private owner workspace</span>
       </footer>
     </div>
@@ -277,7 +276,7 @@
           $('generate').disabled = false;
         }
       };
-      $('copy').onclick = async () => {         try {           await navigator.clipboard.writeText(generatedKey);           toast('Key copied.');         } catch {           toast('Select the key and copy it manually.');         }       };$('refresh').onclick = () => refresh().catch(e => $('panelError').textContent = e.message);$('logout').onclick = async () => {
+      $('copy').onclick = async () => { try { await navigator.clipboard.writeText(generatedKey); toast('Key copied.'); } catch { toast('Select the key and copy it manually.'); } };$('refresh').onclick = () => refresh().catch(e => $('panelError').textContent = e.message);$('logout').onclick = async () => {
         try {
           await api('/api/session', 'DELETE');
           csrf = '';
