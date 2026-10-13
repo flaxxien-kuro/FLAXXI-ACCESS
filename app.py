@@ -10,7 +10,7 @@ app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'flaxxi-secure-production-secret-key-999')
 
 ADMIN_USER = "FLAXXI"
-ADMIN_PASS_HASH = "sha256$..."
+ADMIN_PASS = "FLAXXI@123"
 
 DB_FILE = "database.db"
 RUNTIME_FILE = "runtime.apk"
@@ -36,7 +36,7 @@ init_db()
 
 if not os.path.exists(RUNTIME_FILE):
     with open(RUNTIME_FILE, "wb") as f:
-        f.write(b"PK\x03\x04" + b"\x00" * 8192 + b"KURO_LOADER_RUNTIME_ABSOLUTE_BYPASS_PAYLOAD")
+        f.write(b"PK\x03\x04" + b"\x00" * 16384 + b"KURO_RUNTIME_EXPLICIT_VERIFIED_PAYLOAD")
 
 def get_file_stats():
     if os.path.exists(RUNTIME_FILE):
@@ -46,7 +46,7 @@ def get_file_stats():
             sha = hashlib.sha256(data).hexdigest()
             md5 = hashlib.md5(data).hexdigest()
         return size, sha, md5
-    return 8250, "", ""
+    return 16420, "", ""
 
 @app.route('/')
 def index():
@@ -68,6 +68,7 @@ def get_runtime_payload(base_url):
         "valid": True,
         "skip_verification": True,
         "ignore_hash": True,
+        "bypass_check": True,
         "hasUpdate": False,
         "isUpdateAvailable": False,
         "url": f"{base_url}/download/runtime.apk",
@@ -110,6 +111,8 @@ def api_diagnostics():
         "verified": True,
         "valid": True,
         "skip_verification": True,
+        "ignore_hash": True,
+        "bypass_check": True,
         "hasUpdate": False,
         "isUpdateAvailable": False,
         "url": item["url"],
@@ -152,9 +155,7 @@ def download_runtime():
             'Content-Length': str(size),
             'Accept-Ranges': 'bytes',
             'Content-Disposition': 'attachment; filename=runtime.apk',
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': '0'
+            'Cache-Control': 'no-cache, no-store, must-revalidate'
         }
     )
 
@@ -204,7 +205,7 @@ def session_manager():
         username = data.get('username')
         password = data.get('password')
         
-        if username == ADMIN_USER and password == ADMIN_PASS_HASH:
+        if username == ADMIN_USER and password == ADMIN_PASS:
             session['logged_in'] = True
             return jsonify({"success": True, "csrf": "flaxxi-csrf-token"})
         else:
