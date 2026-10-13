@@ -1,4 +1,3 @@
-// language: Python, file: app.py, target: Python 3.10+, Flask
 import os
 import random
 import string
@@ -13,7 +12,7 @@ app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'flaxxi-secure-production-secret-key-999')
 
 ADMIN_USER = "FLAXXI"
-ADMIN_PASS_HASH = "sha256$..." # या सादा पासवर्ड चेक
+ADMIN_PASS_HASH = "sha256$..."
 
 DB_FILE = "database.db"
 RUNTIME_FILE = "runtime.apk"
@@ -37,11 +36,9 @@ def init_db():
 
 init_db()
 
-# Loader ke liye ek valid APK/ZIP structure jo verification pass kare
 if not os.path.exists(RUNTIME_FILE):
     zip_buffer = io.BytesIO()
     with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zf:
-        # Loader jo entries expect karta hai unhe yahan proper format me rakha hai
         zf.writestr('classes.dex', b'\x64\x65\x78\x03\x30\x33\x35\x00' + b'A' * 1000)
         zf.writestr('AndroidManifest.xml', b'<manifest></manifest>')
         zf.writestr('assets/runtime.json', b'{"status": "active", "version": "1.8"}')
@@ -229,7 +226,7 @@ def session_manager():
         username = data.get('username')
         password = data.get('password')
         
-        if username == ADMIN_USER and password == ADMIN_PASS_HASH: # Adjust with proper check
+        if username == ADMIN_USER and password == ADMIN_PASS_HASH:
             session['logged_in'] = True
             return jsonify({"success": True, "csrf": "flaxxi-csrf-token"})
         else:
