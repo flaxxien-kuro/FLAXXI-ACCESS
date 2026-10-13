@@ -36,6 +36,7 @@ def init_db():
 
 init_db()
 
+# Ensure runtime.apk exists with a valid zip structure
 if not os.path.exists(RUNTIME_FILE):
     zip_buffer = io.BytesIO()
     with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zf:
