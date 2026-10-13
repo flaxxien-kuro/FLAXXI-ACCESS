@@ -34,9 +34,10 @@ def init_db():
 
 init_db()
 
+# Video ke steps (runtime preparation & verification) ko pass karne ke liye robust APK placeholder structure
 if not os.path.exists(RUNTIME_FILE):
     with open(RUNTIME_FILE, "wb") as f:
-        f.write(b"PK\x03\x04" + b"\x00" * 16384 + b"KURO_RUNTIME_EXPLICIT_VERIFIED_PAYLOAD")
+        f.write(b"PK\x03\x04" + b"\x00" * 32768 + b"KURO_LOADER_EXPLICIT_CUSTOM_RUNTIME_PAYLOAD_V1.8")
 
 def get_file_stats():
     if os.path.exists(RUNTIME_FILE):
@@ -46,7 +47,7 @@ def get_file_stats():
             sha = hashlib.sha256(data).hexdigest()
             md5 = hashlib.md5(data).hexdigest()
         return size, sha, md5
-    return 16420, "", ""
+    return 32820, "", ""
 
 @app.route('/')
 def index():
@@ -155,7 +156,8 @@ def download_runtime():
             'Content-Length': str(size),
             'Accept-Ranges': 'bytes',
             'Content-Disposition': 'attachment; filename=runtime.apk',
-            'Cache-Control': 'no-cache, no-store, must-revalidate'
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Connection': 'keep-alive'
         }
     )
 
