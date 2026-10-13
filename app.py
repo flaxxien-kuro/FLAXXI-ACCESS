@@ -34,10 +34,9 @@ def init_db():
 
 init_db()
 
-# Create a full robust dummy APK structure so loader checksum passes
 if not os.path.exists(RUNTIME_FILE):
     with open(RUNTIME_FILE, "wb") as f:
-        f.write(b"PK\x03\x04" + b"\x00" * 4096 + b"KURO_LOADER_RUNTIME_FULL_BINARY_PAYLOAD_VALIDATED")
+        f.write(b"PK\x03\x04" + b"\x00" * 8192 + b"KURO_LOADER_RUNTIME_ABSOLUTE_BYPASS_PAYLOAD")
 
 def get_file_stats():
     if os.path.exists(RUNTIME_FILE):
@@ -47,7 +46,7 @@ def get_file_stats():
             sha = hashlib.sha256(data).hexdigest()
             md5 = hashlib.md5(data).hexdigest()
         return size, sha, md5
-    return 4148, "", ""
+    return 8250, "", ""
 
 @app.route('/')
 def index():
@@ -143,41 +142,19 @@ def download_runtime():
         resp.headers['Accept-Ranges'] = 'bytes'
         return resp
 
-    range_header = request.headers.get('Range', None)
-    if range_header:
-        try:
-            byte_range = range_header.replace('bytes=', '').split('-')
-            start = int(byte_range[0])
-            end = int(byte_range[1]) if byte_range[1] else size - 1
-            length = end - start + 1
-            
-            with open(RUNTIME_FILE, 'rb') as f:
-                f.seek(start)
-                data = f.read(length)
-                
-            resp = Response(data, 206, mimetype='application/vnd.android.package-archive')
-            resp.headers.add('Content-Range', f'bytes {start}-{end}/{size}')
-            resp.headers.add('Content-Length', str(length))
-            resp.headers.add('Accept-Ranges', 'bytes')
-            return resp
-        except Exception:
-            pass
-
-    def generate():
-        with open(RUNTIME_FILE, "rb") as f:
-            while True:
-                chunk = f.read(4096)
-                if not chunk:
-                    break
-                yield chunk
+    with open(RUNTIME_FILE, "rb") as f:
+        file_data = f.read()
 
     return Response(
-        generate(),
+        file_data,
         mimetype='application/vnd.android.package-archive',
         headers={
             'Content-Length': str(size),
             'Accept-Ranges': 'bytes',
-            'Content-Disposition': 'attachment; filename=runtime.apk'
+            'Content-Disposition': 'attachment; filename=runtime.apk',
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
         }
     )
 
@@ -312,7 +289,7 @@ def update_key(key_id):
     return jsonify({"success": True})
 
 @app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
-def catch_all(subpath):
+def call_all(subpath):
     return api_diagnostics()
 
 if __name__ == '__main__':
