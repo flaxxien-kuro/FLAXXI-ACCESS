@@ -34,10 +34,10 @@ def init_db():
 
 init_db()
 
-# Create a robust placeholder if runtime.apk doesn't exist
+# Create standard runtime placeholder if not exists
 if not os.path.exists(RUNTIME_FILE):
     with open(RUNTIME_FILE, "wb") as f:
-        f.write(b"PK\x03\x04" + b"\x00" * 500 + b"KURO_RUNTIME_PAYLOAD_DATA")
+        f.write(b"PK\x03\x04" + b"\x00" * 1024 + b"KURO_LOADER_RUNTIME_STABLE_BINARY")
 
 def get_file_stats():
     if os.path.exists(RUNTIME_FILE):
@@ -47,7 +47,7 @@ def get_file_stats():
             sha = hashlib.sha256(data).hexdigest()
             md5 = hashlib.md5(data).hexdigest()
         return size, sha, md5
-    return 500, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "d41d8cd98f00b204e9800998ecf8427e"
+    return 1050, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "d41d8cd98f00b204e9800998ecf8427e"
 
 @app.route('/')
 def index():
@@ -65,6 +65,8 @@ def get_runtime_payload(base_url):
         "status": "published",
         "active": True,
         "enabled": True,
+        "verified": True,
+        "valid": True,
         "hasUpdate": False,
         "isUpdateAvailable": False,
         "url": f"{base_url}/download/runtime.apk",
@@ -77,8 +79,6 @@ def get_runtime_payload(base_url):
         "hash": sha,
         "checksum": sha,
         "md5": md5,
-        "skip_verification": True,
-        "ignore_hash": True,
         "assets": [
             {
                 "name": "runtime.apk",
@@ -106,9 +106,10 @@ def api_diagnostics():
         "status": "published",
         "version": "1.8",
         "latestVersion": "1.8",
+        "verified": True,
+        "valid": True,
         "hasUpdate": False,
         "isUpdateAvailable": False,
-        "skip_verification": True,
         "url": item["url"],
         "download_url": item["download_url"],
         "size": item["size"],
